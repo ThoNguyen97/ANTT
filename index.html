@@ -59,6 +59,19 @@
   .qnum{font-weight:700;color:var(--info);font-size:14px;background:var(--infobg);padding:2px 9px;border-radius:7px;flex-shrink:0}
   .qtext{font-weight:600;font-size:15px}
   .pager{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0;justify-content:center}
+  .qmap-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;box-shadow:var(--shadow)}
+  .qmap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+  .qmap-title{font-weight:700;font-size:14px}
+  .qmap-legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .qmap-legend span{display:inline-flex;align-items:center;gap:5px}
+  .dotk{width:12px;height:12px;border-radius:4px;display:inline-block}
+  .dotk.done{background:var(--info)}.dotk.todo{background:var(--card);border:1px solid var(--line2)}
+  .qmap{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}
+  @media(max-width:520px){.qmap{grid-template-columns:repeat(8,1fr)}}
+  .qm{aspect-ratio:1;min-height:32px;border-radius:8px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;background:var(--card);font-weight:600;color:var(--muted);transition:.12s}
+  .qm:hover{border-color:var(--info)}
+  .qm.done{background:var(--info);color:#fff;border-color:var(--info)}
+  .qm.cur{outline:2px solid var(--navy);outline-offset:1px}
   .pg{min-width:38px;height:38px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;background:var(--card);font-weight:600;color:var(--muted)}
   .pg:hover{border-color:var(--info)}
   .pg.active{background:var(--info);color:#fff;border-color:var(--info)}
@@ -212,22 +225,37 @@ function start(n){
   quiz();
 }
 function goPage(p){S.page=p;quiz();window.scrollTo({top:0,behavior:"smooth"});}
+function gotoQuestion(i){
+  const p=Math.floor(i/PERPAGE);
+  if(p!==S.page){S.page=p;quiz();}
+  const cards=app.querySelectorAll(".qcard");
+  const local=i-p*PERPAGE;
+  if(cards[local])cards[local].scrollIntoView({behavior:"smooth",block:"center"});
+  updateStats();
+}
 function updateStats(){
   const ex=EXAMS[S.exam];const done=S.ans.filter(a=>a>=0).length;const pages=Math.ceil(ex.length/PERPAGE);
   const pf=document.getElementById("progfill");if(pf)pf.style.width=(done/ex.length*100)+"%";
   const pc=document.getElementById("progcount");if(pc)pc.textContent=done+"/"+ex.length;
   const sl=document.getElementById("subleft");if(sl)sl.textContent="Trang "+(S.page+1)+"/"+pages+" · đã làm "+done+"/"+ex.length+" câu";
-  // update pager dot states for current page range awareness
+  const ds=document.getElementById("doneStat");if(ds)ds.textContent=done+"/"+ex.length;
+  // update pager dot states
   document.querySelectorAll(".pager .pg[data-p]").forEach(d=>{
     const p=+d.getAttribute("data-p");const ps=p*PERPAGE,pe=Math.min(ps+PERPAGE,ex.length);
     d.classList.remove("active","haspart");
     if(p===S.page)d.classList.add("active");
     else{let any=false;for(let i=ps;i<pe;i++)if(S.ans[i]>=0)any=true;if(any)d.classList.add("haspart");}
   });
+  // update question map
+  const start=S.page*PERPAGE, end=Math.min(start+PERPAGE,ex.length);
+  document.querySelectorAll(".qmap .qm[data-i]").forEach(d=>{
+    const i=+d.getAttribute("data-i");
+    d.classList.toggle("done",S.ans[i]>=0);
+    d.classList.toggle("cur",i>=start && i<end);
+  });
 }
 function pickAnswer(i,k,cardEl){
   S.ans[i]=k;
-  // update only this question's options, no re-render, no scroll
   const opts=cardEl.querySelectorAll(".opt");
   opts.forEach((o,idx)=>o.classList.toggle("sel",idx===k));
   updateStats();
@@ -239,7 +267,19 @@ function quiz(){
   const top=$('<div class="examtop"></div>');
   top.innerHTML='<div style="font-weight:700">Đề '+S.exam+'</div><div class="progress"><i id="progfill" style="width:'+(done/ex.length*100)+'%"></i></div><div class="muted" id="progcount" style="white-space:nowrap">'+done+'/'+ex.length+'</div><div class="timer" id="timer">'+fmt(S.left)+'</div>';
   app.appendChild(top);
+  // question map (phiếu trạng thái câu)
   const start=S.page*PERPAGE, end=Math.min(start+PERPAGE,ex.length);
+  const map=$('<div class="qmap-card"></div>');
+  map.innerHTML='<div class="qmap-head"><span class="qmap-title">Bảng câu hỏi</span><span class="qmap-legend"><span><i class="dotk done"></i>Đã chọn</span><span><i class="dotk todo"></i>Chưa chọn</span><span class="muted" id="doneStat">'+done+'/'+ex.length+'</span></span></div>';
+  const grid=$('<div class="qmap"></div>');
+  ex.forEach((_,i)=>{
+    let cls="qm";if(S.ans[i]>=0)cls+=" done";if(i>=start&&i<end)cls+=" cur";
+    const d=$('<div class="'+cls+'" data-i="'+i+'">'+(i+1)+'</div>');
+    d.onclick=()=>gotoQuestion(i);
+    grid.appendChild(d);
+  });
+  map.appendChild(grid);
+  app.appendChild(map);
   for(let i=start;i<end;i++){
     const q=ex[i];const card=$('<div class="qcard"></div>');
     const head=$('<div class="qhead"></div>');head.innerHTML='<span class="qnum">Câu '+(i+1)+'</span><span class="qtext">'+esc(q.q)+'</span>';
