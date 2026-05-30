@@ -5,56 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Luyện thi An ninh thông tin</title>
 <style>
-  :root{--navy:#0d3b66;--bg:#f6f7f9;--card:#fff;--line:#e2e6ea;--txt:#1a2330;--muted:#6b7785;--info:#185fa5;--infobg:#e6f1fb;--ok:#1d7a4d;--okbg:#eaf3e4;--bad:#a32d2d;--badbg:#fcebeb}
+  :root{
+    --navy:#0d3b66;--navy2:#13508c;--bg:#f4f6f9;--card:#fff;--line:#e4e8ee;--line2:#d4dae2;
+    --txt:#1a2330;--muted:#6b7785;--info:#185fa5;--infobg:#eaf2fb;--ok:#1d7a4d;--okbg:#eaf5ee;
+    --bad:#b3261e;--badbg:#fcecea;--amber:#9a6700;--amberbg:#fff7e6;--shadow:0 1px 3px rgba(16,30,54,.06),0 1px 2px rgba(16,30,54,.04)
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --navy:#7fb0e6;--navy2:#9cc4f0;--bg:#0f141a;--card:#171d25;--line:#28303a;--line2:#333d49;
+    --txt:#e6ebf1;--muted:#9aa6b2;--info:#7fb0e6;--infobg:#16263a;--ok:#5fc28e;--okbg:#16291f;
+    --bad:#e88;--badbg:#2a1a1a;--amber:#e0b050;--amberbg:#2a2310;--shadow:0 1px 3px rgba(0,0,0,.4)
+  }}
   *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.5}
-  .wrap{max-width:720px;margin:0 auto;padding:16px}
-  header{text-align:center;padding:18px 0 8px}
-  header h1{font-size:22px;margin:0 0 4px;color:var(--navy)}
-  header p{margin:0;color:var(--muted);font-size:14px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin:12px 0}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
-  .pick{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:.15s}
-  .pick:hover{border-color:var(--info);background:var(--infobg)}
-  .pick b{font-size:15px}.pick span{color:var(--muted);font-size:13px;display:block;margin-top:4px}
-  .opt{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px solid var(--line);border-radius:9px;margin:7px 0;cursor:pointer}
-  .opt:hover{background:var(--bg)}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .topbar{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+  .topbar-inner{max-width:860px;margin:0 auto;padding:11px 16px;display:flex;align-items:center;gap:14px}
+  .brand{font-weight:700;color:var(--navy);font-size:16px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .brand-dot{width:9px;height:9px;border-radius:50%;background:var(--info)}
+  .topnav{margin-left:auto;display:flex;gap:6px}
+  .navbtn{background:transparent;border:1px solid transparent;border-radius:8px;padding:7px 13px;cursor:pointer;font:inherit;font-size:14px;color:var(--muted);font-weight:500}
+  .navbtn:hover{background:var(--bg);color:var(--txt)}
+  .navbtn.active{background:var(--infobg);color:var(--info)}
+  .wrap{max-width:860px;margin:0 auto;padding:18px 16px 60px}
+  .hero{text-align:center;padding:14px 0 4px}
+  .hero h1{font-size:24px;margin:0 0 6px;color:var(--txt);letter-spacing:-.3px}
+  .hero p{margin:0;color:var(--muted);font-size:14.5px}
+  .stats{display:flex;justify-content:center;gap:22px;margin:16px 0 4px;flex-wrap:wrap}
+  .stat{text-align:center}.stat b{display:block;font-size:22px;color:var(--navy)}.stat span{font-size:12px;color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+  .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:8px 0}
+  .exam{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 14px;cursor:pointer;text-align:left;transition:.15s;position:relative;box-shadow:var(--shadow)}
+  .exam:hover{border-color:var(--info);transform:translateY(-2px)}
+  .exam .num{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .exam .nm{font-size:17px;font-weight:700;margin:3px 0 8px;color:var(--txt)}
+  .exam .meta{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .exam .badge{position:absolute;top:12px;right:12px;font-size:11px;background:var(--okbg);color:var(--ok);padding:2px 8px;border-radius:20px;font-weight:600}
+  .ico{width:15px;height:15px;vertical-align:-2px;display:inline-block}
+  .opt{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border:1px solid var(--line);border-radius:10px;margin:8px 0;cursor:pointer;transition:.12s}
+  .opt:hover{background:var(--bg);border-color:var(--line2)}
   .opt.sel{border-color:var(--info);background:var(--infobg)}
   .opt.correct{border-color:var(--ok);background:var(--okbg)}
   .opt.wrong{border-color:var(--bad);background:var(--badbg)}
-  .let{font-weight:600;min-width:18px}
-  .btn{background:#fff;border:1px solid #c7ced6;border-radius:9px;padding:9px 17px;cursor:pointer;font:inherit;font-size:14px;color:var(--txt)}
-  .btn:hover{background:var(--bg)}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.45;cursor:default}
+  .let{font-weight:700;min-width:22px;height:22px;border-radius:6px;background:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .opt.sel .let{background:var(--info);color:#fff}
+  .opt.correct .let{background:var(--ok);color:#fff}
+  .opt.wrong .let{background:var(--bad);color:#fff}
+  .btn{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:10px 18px;cursor:pointer;font:inherit;font-size:14px;color:var(--txt);font-weight:500;transition:.12s}
+  .btn:hover{background:var(--bg)}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.4;cursor:default}
   .btn.pri{border-color:var(--info);background:var(--info);color:#fff}
-  .btn.pri:hover{background:#13508c}
-  .nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
-  .dot{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;background:#fff}
-  .dot.done{background:var(--infobg);color:var(--info);border-color:var(--info)}
-  .dot.cur{border:2px solid var(--info)}
-  .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-  .timer{font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;padding:5px 12px;border-radius:8px;background:var(--bg)}
-  .timer.warn{background:var(--badbg);color:var(--bad)}
-  .metric{background:var(--bg);border-radius:9px;padding:14px;text-align:center}
-  .metric .l{font-size:13px;color:var(--muted)}.metric .v{font-size:26px;font-weight:600;margin-top:4px}
-  .lbrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);font-size:14px}
-  .rank{width:26px;font-weight:600;color:var(--muted)}
-  input{height:38px;border:1px solid #c7ced6;border-radius:9px;padding:0 11px;font:inherit;font-size:14px;width:100%}
+  .btn.pri:hover{background:var(--navy2)}
+  .btn.lg{padding:12px 22px;font-size:15px}
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0;box-shadow:var(--shadow)}
+  .qhead{display:flex;gap:9px;align-items:baseline;margin-bottom:10px}
+  .qnum{font-weight:700;color:var(--info);font-size:14px;background:var(--infobg);padding:2px 9px;border-radius:7px;flex-shrink:0}
+  .qtext{font-weight:600;font-size:15px}
+  .pager{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0;justify-content:center}
+  .pg{min-width:38px;height:38px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;background:var(--card);font-weight:600;color:var(--muted)}
+  .pg:hover{border-color:var(--info)}
+  .pg.active{background:var(--info);color:#fff;border-color:var(--info)}
+  .pg.haspart{border-color:var(--ok);color:var(--ok)}
+  .examtop{position:sticky;top:53px;z-index:10;background:var(--bg);padding:10px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .progress{flex:1;min-width:140px;height:7px;background:var(--line);border-radius:6px;overflow:hidden}
+  .progress i{display:block;height:100%;background:var(--info);transition:width .25s}
+  .timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:16px;padding:6px 13px;border-radius:9px;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+  .timer.warn{background:var(--badbg);color:var(--bad);border-color:var(--bad)}
+  .metric{background:var(--bg);border-radius:11px;padding:16px;text-align:center;border:1px solid var(--line)}
+  .metric .l{font-size:13px;color:var(--muted)}.metric .v{font-size:28px;font-weight:700;margin-top:5px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+  @media(max-width:520px){.grid3{grid-template-columns:1fr}}
+  .lbrow{display:flex;align-items:center;gap:12px;padding:11px 6px;border-bottom:1px solid var(--line);font-size:14px}
+  .lbrow:last-child{border-bottom:none}
+  .rank{width:30px;text-align:center;font-weight:700;color:var(--muted);flex-shrink:0}
+  .rank.r1{color:#d4a017}.rank.r2{color:#9aa6b2}.rank.r3{color:#c08552}
+  .lbname{flex:1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  input{height:40px;border:1px solid var(--line2);border-radius:10px;padding:0 12px;font:inherit;font-size:14px;width:100%;background:var(--card);color:var(--txt)}
+  input:focus{outline:none;border-color:var(--info);box-shadow:0 0 0 3px var(--infobg)}
   .muted{color:var(--muted);font-size:13px}
-  .h{font-size:18px;font-weight:600;margin:0 0 6px}
-  .row{display:flex;gap:8px;flex-wrap:wrap}
-  .warn-box{background:#fff7e6;border:1px solid #ffd98a;border-radius:9px;padding:10px 13px;font-size:13px;color:#7a5300;margin:10px 0}
-  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0}
+  .h{font-size:19px;font-weight:700;margin:0 0 4px}
+  .row{display:flex;gap:9px;flex-wrap:wrap}
+  .warn-box{background:var(--amberbg);border:1px solid #ffd98a;border-radius:10px;padding:11px 14px;font-size:13px;color:var(--amber);margin:10px 0}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{border:1px solid var(--line2);border-radius:20px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:500;background:var(--card);color:var(--muted)}
+  .chip:hover{border-color:var(--info)}.chip.active{background:var(--info);color:#fff;border-color:var(--info)}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(15,22,30,.5);display:flex;align-items:center;justify-content:center;z-index:50;padding:18px;animation:fade .15s}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal{background:var(--card);border-radius:16px;padding:24px;max-width:420px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.25);animation:pop .18s}
+  @keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal h3{margin:0 0 6px;font-size:19px}
+  .modal .info{background:var(--bg);border-radius:10px;padding:13px 15px;margin:14px 0;font-size:14px}
+  .modal .info div{display:flex;justify-content:space-between;padding:3px 0}
+  .modal .info b{font-weight:600}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:28px 0 0}
   a{color:var(--info)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Luyện thi — Nhập môn Đảm bảo & An ninh thông tin</h1>
-    <p>10 bộ đề · 40 câu/đề · 75 phút · tự chấm điểm · bảng xếp hạng chung</p>
-  </header>
-  <div id="app"></div>
-  <footer>Ôn thi ANTT · chia sẻ link cho cả lớp cùng luyện</footer>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand" id="brand"><span class="brand-dot"></span> Luyện thi ANTT</div>
+    <nav class="topnav">
+      <button class="navbtn" id="nav-home">Đề thi</button>
+      <button class="navbtn" id="nav-lb">Bảng xếp hạng</button>
+    </nav>
+  </div>
+</div>
+<div class="wrap"><div id="app"></div>
+  <footer>Ôn thi Nhập môn Đảm bảo & An ninh thông tin · chia sẻ link cho cả lớp cùng luyện</footer>
 </div>
 
 <script type="module">
@@ -82,102 +138,128 @@
   window.LB={
     enabled: !!db,
     async save(rec){ if(!db) return false; await fns.addDoc(fns.collection(db,"scores"),rec); return true; },
-    async load(){ if(!db) return null; const qy=fns.query(fns.collection(db,"scores"),fns.orderBy("score","desc"),fns.limit(300)); const snap=await fns.getDocs(qy); const out=[]; snap.forEach(d=>out.push(d.data())); return out; }
+    async load(){ if(!db) return null; const qy=fns.query(fns.collection(db,"scores"),fns.orderBy("score","desc"),fns.limit(500)); const snap=await fns.getDocs(qy); const out=[]; snap.forEach(d=>out.push(d.data())); return out; }
   };
   window.dispatchEvent(new Event("lb-ready"));
 </script>
 
 <script>
 const BANK=[{"q":"Tam giác CIA trong an ninh thông tin gồm những thành phần nào?","o":["Confidentiality, Integrity, Availability","Control, Identity, Access","Confidentiality, Identity, Authentication","Cryptography, Integrity, Authorization"],"a":0,"t":"B1"},{"q":"Kỹ thuật tấn công nào dùng công cụ như Wireshark để bắt gói tin trên mạng?","o":["DoS","Eavesdropping","Identity Spoofing","Privilege Escalation"],"a":1,"t":"B1"},{"q":"Tính chất nào đảm bảo người gửi không thể chối bỏ việc đã gửi dữ liệu?","o":["Confidentiality","Availability","Non-repudiation","Integrity"],"a":2,"t":"B1"},{"q":"Thứ tự đúng các bước hành động của hacker là:","o":["Scanning → Recon → Access → Escalation","Recon → Scanning → Gaining Access → Escalation → Maintaining → Covering Tracks","Access → Recon → Scanning → Covering Tracks","Recon → Access → Scanning → Escalation"],"a":1,"t":"B1"},{"q":"Nhóm tấn công nào có ít kiến thức và chủ yếu dùng công cụ có sẵn?","o":["Insider","Cracker","Script Kiddies","Cybercriminal"],"a":2,"t":"B1"},{"q":"Nguyên tắc cốt lõi của mô hình Defense in Depth là gì?","o":["Chỉ dùng firewall mạnh nhất","Triển khai nhiều lớp bảo vệ, một lớp vỡ vẫn còn lớp khác","Tập trung toàn bộ bảo mật ở tầng dữ liệu","Mã hoá mọi thứ bằng một khoá duy nhất"],"a":1,"t":"B1"},{"q":"Tấn công DoS/DDoS nhắm vào mục tiêu nào?","o":["Tính toàn vẹn dữ liệu","Tính sẵn sàng của dịch vụ","Tính bí mật của khoá","Chữ ký số"],"a":1,"t":"B1"},{"q":"Mã thay thế đơn giản (Substitution) có bao nhiêu khoá khả dĩ với bảng 26 chữ cái?","o":["26","26²","26!","2^26"],"a":2,"t":"2A"},{"q":"Điểm yếu chính của mã thay thế đơn giản là gì?","o":["Khoá quá dài","Phân tích tần suất (frequency analysis)","Không thể giải mã","Cần máy tính lượng tử"],"a":1,"t":"2A"},{"q":"Với mã Caesar dịch 3 bước, chữ 'A' sẽ trở thành:","o":["C","D","E","X"],"a":1,"t":"2A"},{"q":"Công thức mã hoá Caesar với độ dịch k là:","o":["C = (P × k) mod 26","C = (P + k) mod 26","C = (P − k) × 26","C = P^k mod 26"],"a":1,"t":"2A"},{"q":"Mã Vigenère khác Caesar ở điểm nào?","o":["Dùng ma trận 5×5","Dùng khoá là một từ lặp lại","Không cần khoá","Mã hoá theo cặp ký tự"],"a":1,"t":"2A"},{"q":"Mã Playfair mã hoá dữ liệu theo đơn vị nào?","o":["Từng ký tự đơn","Từng cặp ký tự (digraph)","Từng khối 64-bit","Từng từ"],"a":1,"t":"2A"},{"q":"Trong ma trận Playfair 5×5, hai ký tự nào được xem là một?","o":["U và V","I và J","C và K","O và Q"],"a":1,"t":"2A"},{"q":"Đặc điểm khoá của giải thuật DES là:","o":["128-bit","256-bit","56-bit","512-bit"],"a":2,"t":"2A"},{"q":"MAC (Message Authentication Code) được tạo ra từ:","o":["Chỉ thông điệp","Thông điệp + khoá bí mật","Chỉ khoá công khai","Chữ ký số + digest"],"a":1,"t":"2B"},{"q":"Tính chất 'one-way' của hàm băm nghĩa là:","o":["Có thể tìm ngược dữ liệu gốc từ giá trị băm","Không thể tìm ngược dữ liệu gốc từ giá trị băm","Hai dữ liệu khác nhau luôn có băm khác nhau","Băm có độ dài thay đổi"],"a":1,"t":"2B"},{"q":"Hàm băm MD5 cho ra giá trị có độ dài bao nhiêu bit?","o":["64","128","160","256"],"a":1,"t":"2B"},{"q":"Khi tạo chữ ký số, người gửi mã hoá digest bằng khoá nào?","o":["Khoá công khai của người gửi","Khoá bí mật (private) của người gửi","Khoá công khai của người nhận","Khoá phiên (session key)"],"a":1,"t":"2B"},{"q":"Để kiểm tra chữ ký số, người nhận dùng khoá nào để giải mã chữ ký?","o":["Private key của người nhận","Public key của người gửi","Private key của người gửi","Khoá đối xứng chung"],"a":1,"t":"2B"},{"q":"Chữ ký số KHÔNG đảm bảo tính chất nào sau đây?","o":["Xác thực nguồn gốc","Toàn vẹn","Chống phủ nhận","Tính sẵn sàng của hệ thống"],"a":3,"t":"2B"},{"q":"Footprinting (thăm dò) là bước nào trong quá trình tấn công?","o":["Bước cuối cùng","Bước đầu tiên thu thập thông tin mục tiêu","Bước leo thang đặc quyền","Bước xoá dấu vết"],"a":1,"t":"B3"},{"q":"Kỹ thuật nào tra cứu thông tin đăng ký tên miền?","o":["Ping Sweep","WHOIS Lookup","SYN Scan","Rainbow table"],"a":1,"t":"B3"},{"q":"Quét cổng kiểu Stealth (SYN scan) có đặc điểm:","o":["Hoàn tất bắt tay 3 bước","Gửi gói SYN nhưng không hoàn tất handshake","Gửi gói với cờ FIN, PSH, URG","Quét cổng UDP"],"a":1,"t":"B3"},{"q":"Xmas Scan gửi gói tin với các cờ nào?","o":["SYN, ACK","FIN, PSH, URG","RST, ACK","Chỉ SYN"],"a":1,"t":"B3"},{"q":"Công cụ phổ biến nhất để quét mạng/port là:","o":["John the Ripper","Nmap","Cuckoo","Metasploit"],"a":1,"t":"B3"},{"q":"Tấn công mật khẩu nào dùng bảng băm tính sẵn để tra cứu nhanh?","o":["Brute-force","Dictionary","Rainbow table","Hybrid"],"a":2,"t":"B4"},{"q":"Công cụ nào sau đây dùng để crack mật khẩu?","o":["Wireshark","John the Ripper","Nmap","Regshot"],"a":1,"t":"B4"},{"q":"Mục đích của leo thang đặc quyền (Privilege Escalation) là:","o":["Xoá log hệ thống","Nâng từ quyền user lên admin/root","Bắt gói tin mạng","Mã hoá dữ liệu"],"a":1,"t":"B4"},{"q":"Steganography là kỹ thuật:","o":["Mã hoá dữ liệu bằng khoá công khai","Giấu dữ liệu trong ảnh/âm thanh/video","Crack mật khẩu Windows","Quét lỗ hổng dịch vụ"],"a":1,"t":"B4"},{"q":"Biện pháp nào hiệu quả nhất chống crack mật khẩu?","o":["Dùng mật khẩu ngắn dễ nhớ","Xác thực đa yếu tố (MFA) + mật khẩu mạnh","Tắt tường lửa","Dùng chung một mật khẩu"],"a":1,"t":"B4"},{"q":"Loại mã độc nào tự nhân bản và lây lan qua mạng mà không cần host?","o":["Virus","Worm","Trojan","Spyware"],"a":1,"t":"B5"},{"q":"Ransomware thực hiện hành vi nào?","o":["Ghi lại thao tác bàn phím","Mã hoá dữ liệu và đòi tiền chuộc","Ẩn tiến trình hệ thống","Quét cổng mạng"],"a":1,"t":"B5"},{"q":"Trong cấu trúc file PE, section '.text' chứa gì?","o":["Tài nguyên (icon, ảnh)","Mã thực thi (code)","Dữ liệu chỉ đọc","Bảng import"],"a":1,"t":"B5"},{"q":"Phân tích nào KHÔNG cần chạy mã độc?","o":["Phân tích động","Phân tích tĩnh","Sandbox analysis","Behavioral analysis"],"a":1,"t":"B5"},{"q":"Nguyên tắc nào KHÔNG đúng khi chạy malware trong lab?","o":["Tách biệt mạng (isolated)","Kết nối Internet thật để quan sát đầy đủ","Dùng snapshot để khôi phục","Dùng máy ảo"],"a":1,"t":"B5"},{"q":"Kỹ thuật Packing của mã độc nhằm mục đích:","o":["Tăng tốc độ thực thi","Nén/mã hoá file để né tránh antivirus","Tạo chữ ký số","Quét lỗ hổng"],"a":1,"t":"B5"},{"q":"Điểm yếu nghiêm trọng của WEP liên quan đến IV là:","o":["IV dài 128-bit","IV chỉ 24-bit nên dễ trùng lặp","IV thay đổi mỗi giây","Không dùng IV"],"a":1,"t":"B6"},{"q":"WPA2 Enterprise sử dụng thành phần nào để chứng thực từng người dùng?","o":["Pre-Shared Key","Máy chủ RADIUS (802.1X)","WEP key tĩnh","Captive Portal"],"a":1,"t":"B6"},{"q":"Công cụ phổ biến để bẻ khoá WEP là:","o":["Nmap","Aircrack-ng","Metasploit","Hydra"],"a":1,"t":"B6"},{"q":"Mục tiêu của tính toàn vẹn (Integrity) là gì?","o":["Dữ liệu luôn sẵn sàng","Dữ liệu không bị sửa đổi trái phép","Chỉ người có quyền mới truy cập","Người gửi không thể chối bỏ"],"a":1,"t":"B1"},{"q":"Kỹ thuật Cryptanalysis là gì?","o":["Nghe trộm gói tin","Phân tích chuỗi mã hoá để tìm khoá","Làm nghẽn tài nguyên","Giả mạo địa chỉ IP"],"a":1,"t":"B1"},{"q":"Man-in-the-middle thuộc nhóm tấn công nào?","o":["Identity Spoofing","Denial of Service","Password Pilfering","Intrusion"],"a":0,"t":"B1"},{"q":"Bước 'Maintaining Access' của hacker thường thực hiện điều gì?","o":["Quét cổng","Cài backdoor/trojan để quay lại","Xoá log","Thu thập WHOIS"],"a":1,"t":"B1"},{"q":"Nhóm 'Insider' chỉ đối tượng nào?","o":["Tội phạm tài chính bên ngoài","Nhân viên nội bộ lạm dụng quyền hợp pháp","Người dùng công cụ có sẵn","Hacker mũ trắng"],"a":1,"t":"B1"},{"q":"Lớp nào KHÔNG thuộc mô hình Defense in Depth điển hình?","o":["Physical Security","Network Security","Quantum Security","Application Security"],"a":2,"t":"B1"},{"q":"Để chống nghe trộm trên mạng công cộng, biện pháp tốt nhất là:","o":["Tắt máy chủ","Mã hoá dữ liệu trước khi truyền","Đổi địa chỉ MAC","Dùng mật khẩu dài"],"a":1,"t":"B1"},{"q":"Mã hoá cổ điển dựa trên nguyên lý nào?","o":["Thay thế hoặc hoán vị ký tự","Mã hoá khối 128-bit","Cặp khoá công khai/bí mật","Hàm băm một chiều"],"a":0,"t":"2A"},{"q":"Trong mã Vigenère, công thức mã hoá ký tự thứ i là:","o":["Cᵢ = (Pᵢ − Kᵢ) mod 26","Cᵢ = (Pᵢ + Kᵢ) mod 26","Cᵢ = Pᵢ × Kᵢ","Cᵢ = Pᵢ^Kᵢ"],"a":1,"t":"2A"},{"q":"Vì sao mã Vigenère với khoá ngắn dễ bị phá?","o":["Vì dùng ma trận","Vì có thể phân tích chu kỳ lặp của khoá","Vì khoá quá dài","Vì không dùng modulo"],"a":1,"t":"2A"},{"q":"Quy tắc Playfair: hai ký tự cùng một HÀNG được thay bằng:","o":["Ký tự bên trái","Ký tự bên phải","Ký tự bên dưới","Ký tự góc đối diện"],"a":1,"t":"2A"},{"q":"Quy tắc Playfair: hai ký tự cùng một CỘT được thay bằng:","o":["Ký tự bên phải","Ký tự bên dưới","Ký tự bên trên","Ký tự cùng hàng"],"a":1,"t":"2A"},{"q":"AES ra đời năm nào và thay thế cho thuật toán nào?","o":["1975, thay RSA","2001, thay DES","1999, thay AES","2010, thay MD5"],"a":1,"t":"2A"},{"q":"AES hỗ trợ các độ dài khoá nào?","o":["56-bit","64-bit","128/192/256-bit","160-bit"],"a":2,"t":"2A"},{"q":"Mã hoá bất đối xứng (asymmetric) sử dụng:","o":["Một khoá chung cho cả hai bên","Cặp khoá public và private","Không cần khoá","Ma trận 5×5"],"a":1,"t":"2A"},{"q":"Công dụng cơ bản của hàm băm là:","o":["Tăng tốc độ mạng","Kiểm tra toàn vẹn dữ liệu","Mã hoá đối xứng","Quét cổng"],"a":1,"t":"2B"},{"q":"Tính 'collision resistance' của hàm băm nghĩa là:","o":["Khó tìm hai dữ liệu khác nhau có cùng giá trị băm","Băm có thể đảo ngược","Băm luôn dài 256-bit","Băm thay đổi theo thời gian"],"a":0,"t":"2B"},{"q":"Hàm băm nào hiện được coi là đã thủng (có lỗ hổng)?","o":["SHA-256","SHA-512","SHA-1","SHA-3"],"a":2,"t":"2B"},{"q":"MAC khác chữ ký số ở điểm nào?","o":["MAC dùng khoá bí mật chia sẻ, chữ ký số dùng khoá bất đối xứng","MAC dùng khoá công khai","Chữ ký số không cần băm","MAC chỉ dùng cho mạng không dây"],"a":0,"t":"2B"},{"q":"HMAC là sự kết hợp của:","o":["Hai hàm băm","Hàm băm có khoá (keyed-hash) để chứng thực","Hai chữ ký số","RSA và DES"],"a":1,"t":"2B"},{"q":"Nếu hai digest so sánh KHÁC nhau khi kiểm tra chữ ký số, kết luận là:","o":["Thông điệp toàn vẹn","Thông điệp đã bị thay đổi hoặc giả mạo","Khoá quá ngắn","Hàm băm sai"],"a":1,"t":"2B"},{"q":"Đối tượng nào KHÔNG phải mục tiêu của thăm dò (footprinting)?","o":["Tên miền và địa chỉ IP","Hệ điều hành và dịch vụ","Mật khẩu đã được mã hoá trong RAM","Email và nhân sự tổ chức"],"a":2,"t":"B3"},{"q":"DNS Enumeration thu thập loại thông tin nào?","o":["Bản ghi DNS (MX, NS, A, CNAME)","Mật khẩu người dùng","Khoá AES","Chữ ký số"],"a":0,"t":"B3"},{"q":"Ping Sweep dùng giao thức nào để xác định host sống?","o":["TCP","ICMP Echo Request","UDP","ARP"],"a":1,"t":"B3"},{"q":"Biện pháp phòng chống quét mạng hiệu quả là:","o":["Mở tất cả các port","Dùng Firewall + IDS/IPS, đóng port thừa","Tắt mã hoá","Công khai thông tin hệ thống"],"a":1,"t":"B3"},{"q":"Google Hacking là kỹ thuật:","o":["Tấn công máy chủ Google","Dùng cú pháp tìm kiếm nâng cao để lộ thông tin nhạy cảm","Bẻ khoá Gmail","Quét cổng Google"],"a":1,"t":"B3"},{"q":"Tấn công Dictionary dùng phương pháp nào?","o":["Thử tất cả khả năng","Dùng danh sách từ điển phổ biến","Tra bảng băm sẵn","Lừa người dùng tiết lộ"],"a":1,"t":"B4"},{"q":"Keylogger có chức năng gì?","o":["Ghi lại thao tác bàn phím","Mã hoá ổ đĩa","Quét cổng mạng","Ẩn tiến trình"],"a":0,"t":"B4"},{"q":"Nguyên tắc 'least privilege' nghĩa là:","o":["Cấp quyền tối đa cho mọi người dùng","Chỉ cấp quyền tối thiểu cần thiết","Không phân quyền","Cho phép leo thang đặc quyền"],"a":1,"t":"B4"},{"q":"NTFS Data Stream (ADS) có thể bị lợi dụng để:","o":["Tăng tốc ổ đĩa","Giấu file độc hại","Mã hoá toàn ổ","Quét lỗ hổng"],"a":1,"t":"B4"},{"q":"Mục đích của việc xoá dấu vết (Covering Tracks) là:","o":["Tăng hiệu năng hệ thống","Che giấu hoạt động, cản trở điều tra","Sao lưu dữ liệu","Cập nhật phần mềm"],"a":1,"t":"B4"},{"q":"Trojan có đặc điểm gì?","o":["Tự nhân bản qua mạng","Giả dạng phần mềm hợp pháp","Mã hoá đòi tiền chuộc","Lây nhiễm vào file cần host"],"a":1,"t":"B5"},{"q":"Bảng Import Table trong file PE cho biết:","o":["Danh sách API/hàm mà chương trình gọi","Mã nguồn đầy đủ","Mật khẩu người dùng","Khoá mã hoá"],"a":0,"t":"B5"},{"q":"Vòng đời mã độc, giai đoạn 'Persistence' nhằm:","o":["Lây sang máy khác","Duy trì tồn tại sau khi reboot (registry, scheduled task)","Đánh cắp dữ liệu","Xoá log"],"a":1,"t":"B5"},{"q":"Công cụ nào dùng trong phân tích TĨNH mã độc?","o":["Wireshark","IDA Pro / PE Studio / Strings","Process Monitor","Regshot"],"a":1,"t":"B5"},{"q":"Sandbox dùng trong phân tích động thường là:","o":["John the Ripper","Cuckoo Sandbox / máy ảo","Aircrack-ng","Nmap"],"a":1,"t":"B5"},{"q":"Kỹ thuật Anti-VM của mã độc có mục đích:","o":["Tăng tốc thực thi","Phát hiện môi trường phân tích và từ chối chạy","Mã hoá dữ liệu","Tạo chữ ký số"],"a":1,"t":"B5"},{"q":"Open System Authentication trong Wi-Fi có đặc điểm:","o":["Bảo mật cao nhất","Không yêu cầu chứng thực/mật khẩu","Dùng RADIUS","Dùng chứng chỉ số"],"a":1,"t":"B6"},{"q":"WEP dùng thuật toán nào để kiểm tra toàn vẹn (yếu)?","o":["AES","CRC-32","SHA-256","TKIP"],"a":1,"t":"B6"},{"q":"Lọc địa chỉ MAC (MAC Filtering) có nhược điểm gì?","o":["Quá phức tạp","Địa chỉ MAC có thể bị giả mạo (spoofing)","Không hoạt động với Wi-Fi","Cần máy chủ RADIUS"],"a":1,"t":"B6"},{"q":"Hai trạng thái của dữ liệu cần được bảo vệ là:","o":["Nén và giải nén","Truyền (transmission) và lưu trữ (storage)","Public và private","Online và offline"],"a":1,"t":"B1"},{"q":"Password Pilfering KHÔNG bao gồm phương pháp nào?","o":["Guessing","Dictionary attack","SYN flooding","Password sniffing"],"a":2,"t":"B1"},{"q":"Cracker khác Hacker ở điểm nào?","o":["Cracker chuyên phá hoại, vượt bảo mật để trục lợi","Cracker là nhân viên nội bộ","Cracker không có kỹ năng","Cracker chỉ phòng thủ"],"a":0,"t":"B1"},{"q":"Authentication (Xác thực) trong mô hình bảo mật đảm bảo điều gì?","o":["Dữ liệu luôn sẵn sàng","Người dùng/thiết bị là thật","Người gửi không chối bỏ","Dữ liệu không bị sửa"],"a":1,"t":"B1"},{"q":"Ý nghĩa của Defense in Depth khi một lớp bị phá vỡ:","o":["Toàn hệ thống sụp đổ","Các lớp khác vẫn bảo vệ hệ thống","Phải khởi động lại","Mất toàn bộ dữ liệu"],"a":1,"t":"B1"},{"q":"Intrusion (xâm nhập) được thực hiện bằng cách:","o":["Mã hoá dữ liệu","Khai thác lỗ hổng để truy cập trái phép","Tạo chữ ký số","Sao lưu dữ liệu"],"a":1,"t":"B1"},{"q":"Bước đầu tiên trong chuỗi hành động của hacker là:","o":["Covering Tracks","Reconnaissance (Thăm dò)","Privilege Escalation","Gaining Access"],"a":1,"t":"B1"},{"q":"Phép mã hoá trong đó khoá là một hoán vị của bảng chữ cái là:","o":["Mã dịch chuyển","Mã thay thế đơn giản","Mã Playfair","AES"],"a":1,"t":"2A"},{"q":"Trong mã Caesar, để giải mã ta dùng công thức:","o":["P = (C + k) mod 26","P = (C − k) mod 26","P = C × k mod 26","P = C^k mod 26"],"a":1,"t":"2A"},{"q":"Ưu điểm của Playfair so với Caesar/Vigenère là:","o":["Mã hoá nhanh hơn","Mã hoá theo cặp nên che giấu tần suất đơn ký tự tốt hơn","Không cần khoá","Dùng khoá công khai"],"a":1,"t":"2A"},{"q":"Khi cặp ký tự trong Playfair tạo thành hình chữ nhật, quy tắc là:","o":["Lấy ký tự bên phải","Lấy ký tự bên dưới","Lấy ký tự cùng hàng ở cột của ký tự kia","Bỏ qua cặp đó"],"a":2,"t":"2A"},{"q":"DES là loại mã hoá:","o":["Cổ điển","Khối (block cipher) đối xứng","Bất đối xứng","Hàm băm"],"a":1,"t":"2A"},{"q":"Vì sao DES hiện nay không còn an toàn?","o":["Khoá 56-bit quá ngắn, dễ brute-force","Quá chậm","Không có khoá","Dùng ma trận 5×5"],"a":0,"t":"2A"},{"q":"Các phép biến đổi trong một vòng của AES gồm:","o":["SubBytes, ShiftRows, MixColumns, AddRoundKey","Hoán vị Feistel","Mã hoá tần suất","Tạo cặp khoá"],"a":0,"t":"2A"},{"q":"Mã hoá đối xứng có nhược điểm chính là:","o":["Quá chậm","Vấn đề trao đổi/quản lý khoá chung an toàn","Không thể giải mã","Không bảo mật"],"a":1,"t":"2A"},{"q":"Công thức tổng quát của MAC là:","o":["MAC = E(PU, M)","MAC = C(K, M)","MAC = M + digest","MAC = hash(M) only"],"a":1,"t":"2B"},{"q":"Hàm băm ánh xạ dữ liệu đầu vào thành:","o":["Chuỗi có độ dài cố định","Chuỗi có độ dài bằng đầu vào","Cặp khoá","Ma trận"],"a":0,"t":"2B"},{"q":"SHA-2 bao gồm các biến thể nào?","o":["SHA-128, SHA-160","SHA-224, SHA-256, SHA-384, SHA-512","MD4, MD5","Chỉ SHA-256"],"a":1,"t":"2B"},{"q":"Trong tạo chữ ký số, bước đầu tiên là:","o":["Mã hoá thông điệp bằng AES","Băm thông điệp tạo message digest","Gửi public key","Tạo khoá phiên"],"a":1,"t":"2B"},{"q":"Mục đích chính của chữ ký số là:","o":["Tăng tốc truyền tin","Xác thực nguồn gốc, toàn vẹn, chống phủ nhận","Nén dữ liệu","Quét lỗ hổng"],"a":1,"t":"2B"},{"q":"MD5 ít được dùng hiện nay vì:","o":["Quá chậm","Yếu, dễ bị tấn công đụng độ (collision)","Độ dài 512-bit","Không có khoá"],"a":1,"t":"2B"},{"q":"Scanning (quét) là bước thực hiện sau bước nào?","o":["Covering Tracks","Footprinting (thăm dò)","Privilege Escalation","Maintaining Access"],"a":1,"t":"B3"},{"q":"Mục tiêu của quét mạng là:","o":["Mã hoá dữ liệu","Tìm host sống, port mở, lỗ hổng tiềm ẩn","Xoá log","Tạo backdoor"],"a":1,"t":"B3"},{"q":"TCP Connect Scan có đặc điểm:","o":["Không hoàn tất handshake","Hoàn tất kết nối đầy đủ đến port","Gửi cờ FIN/PSH/URG","Quét UDP"],"a":1,"t":"B3"},{"q":"Email Harvesting là kỹ thuật thăm dò nhằm:","o":["Thu thập địa chỉ email từ website/diễn đàn","Gửi email lừa đảo","Mã hoá email","Bẻ khoá email"],"a":0,"t":"B3"},{"q":"Biện pháp phòng chống thăm dò KHÔNG bao gồm:","o":["Ẩn thông tin WHOIS","Cấu hình DNS an toàn","Công khai toàn bộ sơ đồ mạng","Đào tạo chống Social Engineering"],"a":2,"t":"B3"},{"q":"Brute-force attack là:","o":["Dùng từ điển","Thử tất cả các khả năng cho đến khi đúng","Tra bảng băm sẵn","Lừa đảo qua email"],"a":1,"t":"B4"},{"q":"Hydra là công cụ chuyên dùng để:","o":["Phân tích mã độc","Tấn công brute-force trên nhiều giao thức","Quét cổng","Tạo sandbox"],"a":1,"t":"B4"},{"q":"Metasploit Framework thường dùng trong giai đoạn:","o":["Footprinting","Khai thác lỗ hổng / leo thang đặc quyền","Mã hoá","Backup"],"a":1,"t":"B4"},{"q":"Spyware có mục đích chính là:","o":["Mã hoá đòi tiền","Thu thập dữ liệu cá nhân, theo dõi hoạt động người dùng","Quét cổng","Tạo chữ ký số"],"a":1,"t":"B4"},{"q":"Rootkit dùng trong xoá dấu vết để:","o":["Tăng tốc CPU","Che giấu tiến trình, file, kết nối","Mã hoá ổ đĩa","Quét lỗ hổng"],"a":1,"t":"B4"},{"q":"Định nghĩa Malware là:","o":["Phần mềm tăng hiệu năng","Phần mềm được thiết kế nhằm gây hại/đánh cắp/chiếm quyền","Phần mềm diệt virus","Giao thức mạng"],"a":1,"t":"B5"},{"q":"Nguồn lây nhiễm mã độc KHÔNG bao gồm:","o":["Email đính kèm","USB/thiết bị ngoại vi","Cập nhật bản vá chính hãng từ nhà cung cấp tin cậy","Website độc hại"],"a":2,"t":"B5"},{"q":"Section '.rsrc' trong file PE chứa:","o":["Mã thực thi","Tài nguyên: icon, hình ảnh","Bảng import","Dữ liệu tĩnh"],"a":1,"t":"B5"},{"q":"Mục tiêu của phân tích tĩnh là:","o":["Chạy mã độc và quan sát hành vi","Phân tích mã độc mà không cần chạy","Bắt gói tin mạng","Tạo snapshot"],"a":1,"t":"B5"},{"q":"Trong phân tích động, công cụ Wireshark dùng để:","o":["Theo dõi lưu lượng mạng","Chỉnh sửa registry","Đọc mã nguồn","Tạo khoá"],"a":0,"t":"B5"},{"q":"Obfuscation (làm rối mã) có đặc điểm:","o":["Thay đổi chức năng chương trình","Không đổi chức năng, chỉ làm mã khó hiểu","Tăng tốc thực thi","Mã hoá ổ đĩa"],"a":1,"t":"B5"},{"q":"Chuẩn Wi-Fi nào sử dụng công nghệ MU-MIMO?","o":["802.11b","802.11ac (Wi-Fi 5)","802.11a","802.11g"],"a":1,"t":"B6"},{"q":"SSID là gì?","o":["Khoá mã hoá Wi-Fi","Tên định danh của mạng không dây","Địa chỉ MAC","Giao thức chứng thực"],"a":1,"t":"B6"},{"q":"WEP sử dụng loại khoá mã hoá nào gây ra điểm yếu lớn?","o":["Khoá động thay đổi liên tục","Khoá tĩnh (cố định)","Cặp khoá công khai","Khoá phiên"],"a":1,"t":"B6"},{"q":"Confidentiality (tính bí mật) đảm bảo điều gì?","o":["Dữ liệu không bị sửa đổi","Chỉ người có quyền mới truy cập thông tin","Hệ thống luôn sẵn sàng","Người gửi không chối bỏ"],"a":1,"t":"B1"},{"q":"Tấn công nào làm dịch vụ không khả dụng cho người dùng hợp pháp?","o":["Eavesdropping","Denial of Service","Cryptanalysis","Footprinting"],"a":1,"t":"B1"},{"q":"Cybercriminals có mục tiêu chính là:","o":["Học tập","Lợi ích tài chính","Phòng thủ hệ thống","Kiểm thử bảo mật"],"a":1,"t":"B1"},{"q":"Trong chuỗi tấn công, 'Escalation of Privileges' đứng sau bước nào?","o":["Covering Tracks","Gaining Access (Xâm nhập)","Reconnaissance","Maintaining Access"],"a":1,"t":"B1"},{"q":"Lớp 'Application Security' trong Defense in Depth tập trung chống:","o":["Mất điện","SQL Injection, XSS","Trộm thiết bị vật lý","Nghe trộm sóng Wi-Fi"],"a":1,"t":"B1"},{"q":"Wireshark/Tcpdump là công cụ điển hình cho kỹ thuật nào?","o":["Privilege Escalation","Eavesdropping (nghe trộm)","Ransomware","Footprinting"],"a":1,"t":"B1"},{"q":"Năm thành phần của mô hình bảo mật gồm CIA cộng thêm:","o":["Authentication và Non-repudiation","Packing và Obfuscation","WEP và WPA","Recon và Scanning"],"a":0,"t":"B1"},{"q":"Hill, Caesar, Vigenère, Playfair đều thuộc nhóm:","o":["Mã hoá hiện đại","Mã hoá cổ điển","Hàm băm","Chữ ký số"],"a":1,"t":"2A"},{"q":"Số khoá khả dĩ 26! của mã thay thế đơn giản nhưng vẫn dễ phá vì:","o":["Khoá quá ngắn","Bị phân tích tần suất ký tự","Không có khoá","Dùng modulo 26"],"a":1,"t":"2A"},{"q":"Mã hoá 'HELLO' bằng Caesar dịch 3 sẽ cho kết quả:","o":["KHOOR","IFMMP","EBIIL","JGNNQ"],"a":0,"t":"2A"},{"q":"Trong Playfair, nếu hai ký tự của cặp giống nhau thì:","o":["Bỏ qua","Chèn ký tự X vào giữa","Lấy ký tự đầu tiên","Đổi sang Vigenère"],"a":1,"t":"2A"},{"q":"DES mã hoá khối dữ liệu kích thước:","o":["32-bit","64-bit","128-bit","256-bit"],"a":1,"t":"2A"},{"q":"So với DES, ưu điểm của AES là:","o":["Khoá ngắn hơn","Nhanh, mạnh, an toàn hơn, được dùng rộng rãi (VPN, TLS)","Không cần khoá","Dễ brute-force hơn"],"a":1,"t":"2A"},{"q":"RSA là ví dụ điển hình của mã hoá:","o":["Đối xứng","Bất đối xứng (khoá công khai)","Cổ điển","Hàm băm"],"a":1,"t":"2A"},{"q":"Trong mã hoá đối xứng, người gửi và người nhận:","o":["Dùng chung một khoá bí mật","Dùng cặp khoá khác nhau","Không cần khoá","Chỉ dùng khoá công khai"],"a":0,"t":"2A"},{"q":"MAC đảm bảo những tính chất nào?","o":["Toàn vẹn + xác thực nguồn gốc","Chỉ bảo mật","Chỉ tính sẵn sàng","Nén dữ liệu"],"a":0,"t":"2B"},{"q":"Đặc tính nào KHÔNG phải của hàm băm tốt?","o":["One-way (một chiều)","Collision resistance","Đầu ra độ dài cố định","Có thể giải mã ngược về dữ liệu gốc"],"a":3,"t":"2B"},{"q":"Hàm băm SHA-3 còn được gọi là:","o":["MD5","Keccak","RC4","Blowfish"],"a":1,"t":"2B"},{"q":"Để vừa bảo mật vừa xác thực thông điệp, ta có thể:","o":["Chỉ dùng MAC","Kết hợp MAC với mã hoá (Authentication + Confidentiality)","Chỉ dùng CRC","Bỏ qua khoá"],"a":1,"t":"2B"},{"q":"Khi kiểm tra chữ ký số, nếu digest₁ = digest₂ thì:","o":["Thông điệp bị giả mạo","Thông điệp toàn vẹn và đúng nguồn gốc","Khoá sai","Phải gửi lại"],"a":1,"t":"2B"},{"q":"Ứng dụng của hàm băm là tạo:","o":["Khoá đối xứng","Dấu vân tay số (digital fingerprint)","Địa chỉ IP","Cổng mạng"],"a":1,"t":"2B"},{"q":"WHOIS Lookup giúp kẻ tấn công thu thập:","o":["Mật khẩu hệ thống","Thông tin đăng ký tên miền","Khoá AES","Mã nguồn ứng dụng"],"a":1,"t":"B3"},{"q":"Stealth Scan còn được gọi là:","o":["Full Connect Scan","Half-open / SYN scan","Ping Sweep","ARP scan"],"a":1,"t":"B3"},{"q":"FIN/NULL Scan gửi gói tin như thế nào?","o":["Gói SYN hoàn chỉnh","Gói FIN hoặc gói không có cờ","Gói ICMP Echo","Gói có đủ SYN+ACK"],"a":1,"t":"B3"},{"q":"IDS/IPS có vai trò gì trong phòng chống quét mạng?","o":["Mã hoá dữ liệu","Phát hiện quét port và cảnh báo","Tạo backdoor","Tăng tốc mạng"],"a":1,"t":"B3"},{"q":"Network Enumeration nhằm xác định:","o":["IP, subnet, topology mạng","Mật khẩu Wi-Fi","Chữ ký số","Khoá RSA"],"a":0,"t":"B3"},{"q":"Hybrid attack là sự kết hợp của:","o":["Dictionary + Brute-force","Rainbow + Sniffing","Social engineering + Phishing","SYN + FIN scan"],"a":0,"t":"B4"},{"q":"L0phtCrack được dùng để:","o":["Quét cổng","Crack mật khẩu Windows","Phân tích mã độc","Tạo sandbox"],"a":1,"t":"B4"},{"q":"Account lockout (khoá tài khoản) là biện pháp chống:","o":["Steganography","Brute-force/đăng nhập sai nhiều lần","Rootkit","SQL Injection"],"a":1,"t":"B4"},{"q":"NTFS cho phép kẻ tấn công lợi dụng để:","o":["Tăng dung lượng ổ","Đặt thuộc tính hidden/system để giấu file độc hại","Mã hoá toàn ổ đĩa","Quét lỗ hổng"],"a":1,"t":"B4"},{"q":"Công cụ 'file wiping' dùng trong xoá dấu vết để:","o":["Khôi phục dữ liệu","Xoá dữ liệu không thể khôi phục","Sao lưu log","Tăng tốc ổ đĩa"],"a":1,"t":"B4"},{"q":"Rootkit (loại malware) có đặc điểm:","o":["Mã hoá đòi tiền","Che giấu sự tồn tại của tiến trình hoặc file","Tự nhân bản qua email","Ghi phím"],"a":1,"t":"B5"},{"q":"Giai đoạn 'Lateral Movement' trong vòng đời mã độc nghĩa là:","o":["Xâm nhập ban đầu","Lan từ máy bị nhiễm sang máy khác trong mạng","Xoá dấu vết","Thực thi mã"],"a":1,"t":"B5"},{"q":"Section '.data' trong file PE chứa:","o":["Mã thực thi","Dữ liệu (biến) tĩnh","Tài nguyên icon","Bảng import"],"a":1,"t":"B5"},{"q":"Process Monitor và Regshot là công cụ dùng trong:","o":["Phân tích tĩnh","Phân tích động","Footprinting","Mã hoá"],"a":1,"t":"B5"},{"q":"Hành vi điển hình nào sau đây là của mã độc?","o":["Tự nhân bản, gửi dữ liệu ra ngoài, vô hiệu hoá AV","Cập nhật bản vá tự động","Sao lưu định kỳ","Tối ưu hoá registry"],"a":0,"t":"B5"},{"q":"Để chạy malware an toàn trong lab cần:","o":["Kết nối Internet thật","Mạng cô lập + snapshot khôi phục + máy ảo","Chạy trên máy chính","Tắt máy ảo"],"a":1,"t":"B5"},{"q":"WPA2 Personal (PSK) phù hợp với môi trường nào?","o":["Mạng doanh nghiệp lớn","Mạng gia đình/văn phòng nhỏ","Mạng công cộng miễn phí","Không dùng được"],"a":1,"t":"B6"},{"q":"EAP-TLS sử dụng cơ chế nào để bảo mật cao nhất?","o":["Mật khẩu chung","Chứng chỉ số (digital certificate)","Địa chỉ MAC","CRC-32"],"a":1,"t":"B6"},{"q":"WPS (Wi-Fi Protected Setup) có nhược điểm gì?","o":["Quá an toàn","Dễ bị khai thác qua tấn công brute-force mã PIN","Không kết nối được","Cần RADIUS"],"a":1,"t":"B6"},{"q":"Trong tam giác CIA, chữ 'A' đại diện cho:","o":["Availability (Sẵn sàng)","Authentication","Authorization","Access"],"a":0,"t":"B1"},{"q":"Tấn công sniffing trên mạng không dây dễ thực hiện hơn vì:","o":["Tín hiệu lan trong không gian, ai trong vùng phủ cũng bắt được","Wi-Fi không mã hoá được","Không có địa chỉ MAC","Router luôn tắt firewall"],"a":0,"t":"B1"},{"q":"Hacker mũ trắng (white-hat) khác mũ đen (black-hat) ở chỗ:","o":["Tấn công có phép nhằm tìm và vá lỗ hổng","Không có kỹ năng","Chỉ phá hoại","Là nhân viên nội bộ"],"a":0,"t":"B1"},{"q":"Social engineering khai thác yếu tố nào là chính?","o":["Tâm lý/lòng tin con người","Lỗ hổng phần cứng","Thuật toán mã hoá","Băng thông mạng"],"a":0,"t":"B1"},{"q":"Lớp bảo mật vật lý (Physical Security) trong Defense in Depth gồm:","o":["Kiểm soát ra vào phòng máy, khoá tủ thiết bị","Cấu hình firewall","Mã hoá dữ liệu","Vá lỗi hệ điều hành"],"a":0,"t":"B1"},{"q":"Phishing là hình thức tấn công thuộc nhóm:","o":["Social engineering","DoS","Cryptanalysis","Port scanning"],"a":0,"t":"B1"},{"q":"Mục tiêu chính của tấn công Replay là:","o":["Bắt và phát lại gói tin hợp lệ để truy cập trái phép","Làm nghẽn băng thông","Bẻ khoá mã hoá","Quét cổng mở"],"a":0,"t":"B1"},{"q":"Tính toàn vẹn (Integrity) bị vi phạm khi:","o":["Dữ liệu bị sửa đổi trái phép trên đường truyền","Hệ thống quá tải","Mật khẩu bị lộ","Dịch vụ ngừng chạy"],"a":0,"t":"B1"},{"q":"Mã Caesar là trường hợp đặc biệt của Vigenère khi:","o":["Khoá chỉ có 1 ký tự (d=1)","Khoá rỗng","Khoá dài bằng thông điệp","Dùng ma trận 5×5"],"a":0,"t":"2A"},{"q":"Yêu cầu 'khả năng bảo mật chốt vào khoá, không vào giải thuật' tương ứng nguyên lý:","o":["Kerckhoffs","Shannon","Euler","Diffie"],"a":0,"t":"2A"},{"q":"Mã hoán vị (Permutation/Transposition) hoạt động bằng cách:","o":["Đổi thứ tự (vị trí) các ký tự theo khoá","Thay ký tự này bằng ký tự khác","Cộng modulo khoá","Băm thông điệp"],"a":0,"t":"2A"},{"q":"Trong Playfair, hai ký tự được gộp thành một là:","o":["I và J","U và V","C và K","O và Q"],"a":0,"t":"2A"},{"q":"Nhược điểm lớn nhất của mã hoá đối xứng là:","o":["Phân phối/trao đổi khoá bí mật an toàn","Tốc độ chậm","Không giải mã được","Khoá quá ngắn bắt buộc"],"a":0,"t":"2A"},{"q":"Ưu điểm của mã hoá bất đối xứng so với đối xứng:","o":["Giải quyết bài toán trao đổi khoá qua kênh công khai","Nhanh hơn nhiều","Khoá ngắn hơn","Không cần khoá"],"a":0,"t":"2A"},{"q":"DES sử dụng cấu trúc nào trong các vòng mã hoá?","o":["Mạng Feistel","Mạng SP của AES","Hàm băm","Cặp khoá RSA"],"a":0,"t":"2A"},{"q":"Tấn công vét cạn (brute-force) lên khoá hiệu quả hơn khi:","o":["Độ dài khoá ngắn","Khoá rất dài","Dùng AES-256","Có chữ ký số"],"a":0,"t":"2A"},{"q":"Điểm khác biệt cơ bản giữa MAC và hàm băm thường:","o":["MAC dùng khoá bí mật, hàm băm thường thì không","MAC không dùng băm","Hàm băm có thể đảo ngược","MAC dài hơn 256-bit"],"a":0,"t":"2B"},{"q":"Chữ ký số chống được tấn công nào mà MAC không chống tốt?","o":["Phủ nhận (non-repudiation) giữa hai bên","Nghe trộm","DoS","Quét cổng"],"a":0,"t":"2B"},{"q":"HMAC kết hợp khoá bí mật với:","o":["Một hàm băm (vd SHA-256)","Một khoá công khai","Thuật toán RSA","CRC-32"],"a":0,"t":"2B"},{"q":"Tính chất 'preimage resistance' của hàm băm nghĩa là:","o":["Khó tìm thông điệp cho trước một giá trị băm","Hai băm luôn khác nhau","Băm có độ dài thay đổi","Băm nhanh"],"a":0,"t":"2B"},{"q":"Trong chữ ký số, người nhận dùng khoá nào để xác minh?","o":["Khoá công khai của người gửi","Khoá riêng của người gửi","Khoá riêng của người nhận","Khoá đối xứng chung"],"a":0,"t":"2B"},{"q":"Mục đích của 'message digest' trong chữ ký số là:","o":["Đại diện cố định, ngắn gọn cho thông điệp để ký","Mã hoá toàn bộ thông điệp","Nén để truyền nhanh","Tạo khoá phiên"],"a":0,"t":"2B"},{"q":"WHOIS, DNS lookup, Google Hacking thuộc giai đoạn nào?","o":["Footprinting (thăm dò) thụ động/chủ động","Quét cổng","Khai thác","Xoá dấu vết"],"a":0,"t":"B3"},{"q":"Quét nửa mở (half-open) còn gọi là:","o":["SYN scan","TCP connect scan","Xmas scan","UDP scan"],"a":0,"t":"B3"},{"q":"Banner grabbing nhằm mục đích:","o":["Xác định phiên bản dịch vụ/OS đang chạy","Bắt mật khẩu","Mã hoá lưu lượng","Xoá log"],"a":0,"t":"B3"},{"q":"Công cụ Nmap KHÔNG dùng để:","o":["Mã hoá ổ đĩa","Quét cổng","Phát hiện host sống","Dò OS"],"a":0,"t":"B3"},{"q":"Thăm dò thụ động (passive) khác chủ động (active) ở chỗ:","o":["Không tương tác trực tiếp với hệ thống mục tiêu","Luôn gửi gói SYN","Cần quyền admin","Phải cài backdoor"],"a":0,"t":"B3"},{"q":"Tấn công Rainbow table hiệu quả bị vô hiệu hoá bằng kỹ thuật:","o":["Thêm salt vào mật khẩu trước khi băm","Dùng mật khẩu ngắn","Tắt firewall","Mã hoá Caesar"],"a":0,"t":"B4"},{"q":"Pass-the-Hash là kỹ thuật trong giai đoạn:","o":["Lan truyền / leo thang (dùng hash đánh cắp để xác thực)","Thăm dò","Mã hoá","Footprinting"],"a":0,"t":"B4"},{"q":"Alternate Data Stream (ADS) là đặc trưng của hệ thống tập tin:","o":["NTFS","FAT32","EXT4","exFAT"],"a":0,"t":"B4"},{"q":"Để chống keylogger phần mềm, biện pháp phù hợp là:","o":["Dùng AV cập nhật + không cài phần mềm lạ + xác thực đa yếu tố","Dùng mật khẩu ngắn","Tắt mã hoá","Mở tất cả cổng"],"a":0,"t":"B4"},{"q":"Mục tiêu của leo thang đặc quyền theo chiều ngang (horizontal) là:","o":["Chiếm quyền của một người dùng khác cùng cấp","Lên quyền admin","Xoá log","Quét cổng"],"a":0,"t":"B4"},{"q":"Loại malware đòi tiền chuộc bằng cách mã hoá dữ liệu là:","o":["Ransomware","Adware","Rootkit","Keylogger"],"a":0,"t":"B5"},{"q":"Bom logic (logic bomb) kích hoạt khi:","o":["Thoả một điều kiện/thời điểm định trước","Máy khởi động","Cắm USB","Mở trình duyệt"],"a":0,"t":"B5"},{"q":"Kỹ thuật đóng gói (packing) gây khó cho:","o":["Phân tích tĩnh và nhận diện chữ ký của antivirus","Kết nối mạng","Khởi động máy","Gõ bàn phím"],"a":0,"t":"B5"},{"q":"Trong phân tích động, snapshot máy ảo dùng để:","o":["Khôi phục nhanh trạng thái sạch sau khi chạy mã độc","Tăng tốc CPU","Mã hoá ổ đĩa","Quét cổng"],"a":0,"t":"B5"},{"q":"Section nào trong file PE thường chứa chuỗi ký tự, hằng số, thông tin import?","o":[".rdata",".text",".bss","stack"],"a":0,"t":"B5"},{"q":"Command-and-Control (C2) trong vòng đời mã độc là:","o":["Kênh để kẻ tấn công điều khiển máy bị nhiễm từ xa","Bước xâm nhập ban đầu","Quá trình băm","Cơ chế nén file"],"a":0,"t":"B5"},{"q":"Chuẩn Wi-Fi 802.11ax còn được gọi là:","o":["Wi-Fi 6","Wi-Fi 4","Wi-Fi 5","Wi-Fi 7"],"a":0,"t":"B6"},{"q":"WPA3 cải tiến bảo mật so với WPA2 chủ yếu nhờ:","o":["Giao thức SAE thay cho PSK, chống tấn công offline","Dùng WEP","Khoá tĩnh","Tắt mã hoá"],"a":0,"t":"B6"},{"q":"Tấn công gây nhiễu (jamming) nhắm vào tính chất nào của mạng?","o":["Tính sẵn sàng (Availability)","Tính bí mật","Chữ ký số","Tính không chối bỏ"],"a":0,"t":"B6"},{"q":"Mã hoá \"CRYPTO\" bằng Caesar với k=4. Kết quả:","o":["FUBSWR","YNULPK","HWDUYT","GVCTXS"],"a":3,"t":"2A"},{"q":"Mã hoá \"SECURITY\" bằng Caesar với k=6. Kết quả:","o":["MYWOLCNS","XJHZWNYD","ZLJBYPAF","YKIAXOZE"],"a":3,"t":"2A"},{"q":"Mã hoá \"MALWARE\" bằng Caesar với k=2. Kết quả:","o":["PDOZDUH","KYJUYPC","OCNYCTG","NBMXBSF"],"a":2,"t":"2A"},{"q":"Mã hoá \"FIREWALL\" bằng Caesar với k=8. Kết quả:","o":["XAJWOSDD","NQZMEITT","ORANFJUU","MPYLDHSS"],"a":1,"t":"2A"},{"q":"Mã hoá \"PASSWORD\" bằng Caesar với k=5. Kết quả:","o":["KVNNRJMY","UFXXBTWI","TEWWASVH","VGYYCUXJ"],"a":1,"t":"2A"},{"q":"Mã hoá \"NETWORK\" bằng Caesar với k=9. Kết quả:","o":["EVKNFIB","XODGYBU","WNCFXAT","VMBEWZS"],"a":2,"t":"2A"},{"q":"Mã hoá \"VIRUS\" bằng Caesar với k=3. Kết quả:","o":["SFORP","XKTWU","YLUXV","ZMVYW"],"a":2,"t":"2A"},{"q":"Mã hoá \"HACKER\" bằng Caesar với k=11. Kết quả:","o":["SLNVPC","WPRZTG","TMOWQD","RKMUOB"],"a":0,"t":"2A"},{"q":"Mã hoá \"CIPHER\" bằng Caesar với k=7. Kết quả:","o":["JPWOLY","VBIAXK","KQXPMZ","IOVNKX"],"a":0,"t":"2A"},{"q":"Mã hoá \"ATTACK\" bằng Caesar với k=13. Kết quả:","o":["UNNUWE","OHHOQY","NGGNPX","MFFMOW"],"a":2,"t":"2A"},{"q":"Giải mã \"KHOOR\" bằng Caesar với k=3. Bản rõ là:","o":["DAHHK","HELLO","IFMMP","JGNNQ"],"a":1,"t":"2A"},{"q":"Giải mã \"BTWQI\" bằng Caesar với k=5. Bản rõ là:","o":["YQTNF","WORLD","QILFX","XPSME"],"a":1,"t":"2A"},{"q":"Giải mã \"GMTLIV\" bằng Caesar với k=4. Bản rõ là:","o":["DJQIFS","CIPHER","XDKCZM","EKRJGT"],"a":1,"t":"2A"},{"q":"Giải mã \"ZLJYLA\" bằng Caesar với k=7. Bản rõ là:","o":["KWUJWL","UGETGV","SECRET","TFDSFU"],"a":2,"t":"2A"},{"q":"Giải mã \"CVVCEM\" bằng Caesar với k=2. Bản rõ là:","o":["CVVCEM","BUUBDL","XQQXZH","ATTACK"],"a":3,"t":"2A"},{"q":"Mã hoá \"CRYPTO\" bằng Vigenère khoá \"KEY\". Kết quả:","o":["CRYPTO","AVINXY","DSZQUP","MVWZXM"],"a":3,"t":"2A"},{"q":"Mã hoá \"SECURE\" bằng Vigenère khoá \"ABC\". Kết quả:","o":["SECURE","TFDVSF","SFEUSG","UFCWSE"],"a":2,"t":"2A"},{"q":"Mã hoá \"NETWORK\" bằng Vigenère khoá \"CAT\". Kết quả:","o":["PEMYOKM","GEVPOTD","NETWORK","OFUXPSL"],"a":0,"t":"2A"},{"q":"Mã hoá \"MALWARE\" bằng Vigenère khoá \"KEY\". Kết quả:","o":["KEVUEBC","NBMXBSF","WEJGEPO","MALWARE"],"a":2,"t":"2A"},{"q":"Mã hoá \"ATTACK\" bằng Vigenère khoá \"DOG\". Kết quả:","o":["GHWGQN","BUUBDL","DHZDQQ","ATTACK"],"a":2,"t":"2A"},{"q":"Mã hoá \"CIPHER\" bằng Vigenère khoá \"SUN\". Kết quả:","o":["UCCZYE","DJQIFS","PCHUYJ","CIPHER"],"a":0,"t":"2A"},{"q":"Affine e(x)=5x+8 (mod 26). Mã hoá \"HELLO\" cho:","o":["PMTTW","RCLLA","SDMMB","FKHHC"],"a":1,"t":"2A"},{"q":"Affine e(x)=3x+7 (mod 26). Mã hoá \"CRYPTO\" cho:","o":["OHCBNY","NGBAMX","ROXEYZ","JYFWAV"],"a":1,"t":"2A"},{"q":"Affine e(x)=7x+2 (mod 26). Mã hoá \"SECURE\" cho:","o":["UGEWTG","YEQMRE","IMUAZM","ZFRNSF"],"a":1,"t":"2A"},{"q":"Affine e(x)=5x+3 (mod 26). Mã hoá \"NETWORK\" cho:","o":["QFGBXSV","RYVKWLC","QXUJVKB","QHWZRUN"],"a":2,"t":"2A"},{"q":"Affine e(x)=3x+5 (mod 26). Mã hoá \"ATTACK\" cho:","o":["FWWFPD","FKKFLJ","GLLGMK","FYYFHP"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"SECURITY\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["N","Z","G","H"],"a":2,"t":"2A"},{"q":"Playfair với khoá \"SECURITY\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["B","L","H","A"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"SECURITY\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["V","M","N","U"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"CRYPTO\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["N","Z","H","I"],"a":2,"t":"2A"},{"q":"Playfair với khoá \"CRYPTO\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["D","L","I","E"],"a":0,"t":"2A"},{"q":"Playfair với khoá \"CRYPTO\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["N","V","P","M"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"FIREWALL\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["Q","K","M","Z"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"FIREWALL\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["C","M","D","O"],"a":0,"t":"2A"},{"q":"Playfair với khoá \"FIREWALL\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["V","E","P","Q"],"a":2,"t":"2A"},{"q":"Playfair với khoá \"BAOMAT\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["K","L","Z","R"],"a":0,"t":"2A"},{"q":"Playfair với khoá \"BAOMAT\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["P","F","L","G"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"BAOMAT\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["M","Q","W","R"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"NETWORK\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["Z","P","H","G"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"NETWORK\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["L","B","H","C"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"NETWORK\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["M","P","W","V"],"a":0,"t":"2A"},{"q":"Playfair với khoá \"MALWARE\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["Q","I","K","Z"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"MALWARE\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["O","F","K","D"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"MALWARE\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["Q","W","V","P"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"KEYWORD\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["I","H","Z","P"],"a":1,"t":"2A"},{"q":"Playfair với khoá \"KEYWORD\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["M","C","B","I"],"a":2,"t":"2A"},{"q":"Playfair với khoá \"KEYWORD\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["U","W","N","P"],"a":2,"t":"2A"},{"q":"Playfair với khoá \"CIPHER\" (I=J). Ký tự ở hàng 3, cột 3 của ma trận khoá là:","o":["Z","S","M","L"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"CIPHER\" (I=J). Ký tự ở hàng 2, cột 4 của ma trận khoá là:","o":["F","O","M","D"],"a":3,"t":"2A"},{"q":"Playfair với khoá \"CIPHER\" (I=J). Ký tự ở hàng 4, cột 2 của ma trận khoá là:","o":["Q","S","H","W"],"a":0,"t":"2A"},{"q":"Ciphertext khi mã hoá \"AN NINH MANG\" bằng Playfair khoá \"SECURITY\" là:","o":["YOLYOGOTNW","YOLYOGOTWN","NWTOGOYLOY","ZPMZPHPUXO"],"a":1,"t":"2A"},{"q":"Ký tự đầu tiên của ciphertext khi mã hoá \"AN NINH MANG\" (Playfair, khoá \"SECURITY\") là:","o":["Z","L","O","Y"],"a":3,"t":"2A"},{"q":"Ciphertext khi mã hoá \"BAO MAT THONG TIN\" bằng Playfair khoá \"CRYPTO\" là:","o":["ECBMFSZLCMLSIR","DBALERYKBLKRHQ","QHRKLBKYRELABD","DBALERYKBLKRQH"],"a":1,"t":"2A"},{"q":"Ký tự đầu tiên của ciphertext khi mã hoá \"BAO MAT THONG TIN\" (Playfair, khoá \"CRYPTO\") là:","o":["D","A","E","B"],"a":0,"t":"2A"},{"q":"Ciphertext khi mã hoá \"TAN CONG MANG\" bằng Playfair khoá \"FIREWALL\" là:","o":["UKGDNHGTDMDO","PENEUHIOEHLV","ODMDTGHNDGUK","ODMDTGHNDGKU"],"a":3,"t":"2A"},{"q":"Ký tự đầu tiên của ciphertext khi mã hoá \"TAN CONG MANG\" (Playfair, khoá \"FIREWALL\") là:","o":["D","O","M","P"],"a":1,"t":"2A"},{"q":"Ciphertext khi mã hoá \"MA HOA DU LIEU\" bằng Playfair khoá \"NETWORK\" là:","o":["PKIWRGNUFOVY","PKIWRGNUFOYV","YVOFUNGRWIKP","QLJXSHOVGPWZ"],"a":0,"t":"2A"},{"q":"Ký tự đầu tiên của ciphertext khi mã hoá \"MA HOA DU LIEU\" (Playfair, khoá \"NETWORK\") là:","o":["P","I","Q","K"],"a":0,"t":"2A"},{"q":"Ciphertext khi mã hoá \"CHU KY SO\" bằng Playfair khoá \"CIPHER\" là:","o":["IEQNXTSV","JFROYUTW","VSTXNQEI","IEQNXTVS"],"a":0,"t":"2A"},{"q":"Ký tự đầu tiên của ciphertext khi mã hoá \"CHU KY SO\" (Playfair, khoá \"CIPHER\") là:","o":["Q","J","I","E"],"a":2,"t":"2A"},{"q":"Ciphertext khi mã hoá \"HAM BAM\" bằng Playfair khoá \"KEYWORD\" là:","o":["PRRQHP","PHQRRP","PHQRPR","QIRSSQ"],"a":1,"t":"2A"},{"q":"Ký tự đầu tiên của ciphertext khi mã hoá \"HAM BAM\" (Playfair, khoá \"KEYWORD\") là:","o":["H","Q","X","P"],"a":3,"t":"2A"},{"q":"RSA với p=3, q=11. Giá trị n và φ(n) lần lượt là:","o":["n=33, φ(n)=22","n=33, φ(n)=33","n=33, φ(n)=20","n=14, φ(n)=20"],"a":2,"t":"2B"},{"q":"RSA p=3, q=11 (φ=20), chọn e=3. Khoá riêng d = e⁻¹ mod 20 là:","o":["9","8","6","7"],"a":3,"t":"2B"},{"q":"RSA p=3, q=11 (φ=20), chọn e=7. Khoá riêng d = e⁻¹ mod 20 là:","o":["4","2","5","3"],"a":3,"t":"2B"},{"q":"RSA với p=5, q=11. Giá trị n và φ(n) lần lượt là:","o":["n=55, φ(n)=55","n=55, φ(n)=42","n=55, φ(n)=40","n=16, φ(n)=40"],"a":2,"t":"2B"},{"q":"RSA p=5, q=11 (φ=40), chọn e=3. Khoá riêng d = e⁻¹ mod 40 là:","o":["28","29","27","26"],"a":2,"t":"2B"},{"q":"RSA với p=5, q=7. Giá trị n và φ(n) lần lượt là:","o":["n=12, φ(n)=24","n=35, φ(n)=24","n=35, φ(n)=26","n=35, φ(n)=35"],"a":1,"t":"2B"},{"q":"RSA p=5, q=7 (φ=24), chọn e=5. Khoá riêng d = e⁻¹ mod 24 là:","o":["4","7","5","6"],"a":2,"t":"2B"},{"q":"RSA với p=7, q=11. Giá trị n và φ(n) lần lượt là:","o":["n=77, φ(n)=62","n=77, φ(n)=60","n=18, φ(n)=60","n=77, φ(n)=77"],"a":1,"t":"2B"},{"q":"RSA p=7, q=11 (φ=60), chọn e=7. Khoá riêng d = e⁻¹ mod 60 là:","o":["42","43","45","44"],"a":1,"t":"2B"},{"q":"RSA với p=3, q=7. Giá trị n và φ(n) lần lượt là:","o":["n=10, φ(n)=12","n=21, φ(n)=14","n=21, φ(n)=12","n=21, φ(n)=21"],"a":2,"t":"2B"},{"q":"RSA p=3, q=7 (φ=12), chọn e=5. Khoá riêng d = e⁻¹ mod 12 là:","o":["5","7","4","6"],"a":0,"t":"2B"},{"q":"RSA với p=5, q=13. Giá trị n và φ(n) lần lượt là:","o":["n=65, φ(n)=48","n=18, φ(n)=48","n=65, φ(n)=65","n=65, φ(n)=50"],"a":0,"t":"2B"},{"q":"RSA p=5, q=13 (φ=48), chọn e=5. Khoá riêng d = e⁻¹ mod 48 là:","o":["30","31","29","28"],"a":2,"t":"2B"},{"q":"RSA với p=7, q=13. Giá trị n và φ(n) lần lượt là:","o":["n=91, φ(n)=74","n=20, φ(n)=72","n=91, φ(n)=72","n=91, φ(n)=91"],"a":2,"t":"2B"},{"q":"RSA p=7, q=13 (φ=72), chọn e=5. Khoá riêng d = e⁻¹ mod 72 là:","o":["28","29","31","30"],"a":1,"t":"2B"},{"q":"RSA với n=33, e=3. Mã hoá bản rõ M=4: C = M^e mod n bằng:","o":["32","30","64","31"],"a":3,"t":"2B"},{"q":"RSA với n=33, e=3. Mã hoá bản rõ M=5: C = M^e mod n bằng:","o":["125","26","25","27"],"a":1,"t":"2B"},{"q":"RSA với n=35, e=5. Mã hoá bản rõ M=2: C = M^e mod n bằng:","o":["TS","31","32","33"],"a":2,"t":"2B"},{"q":"RSA với n=55, e=3. Mã hoá bản rõ M=4: C = M^e mod n bằng:","o":["8","64","10","9"],"a":3,"t":"2B"},{"q":"RSA với n=33, e=7. Mã hoá bản rõ M=2: C = M^e mod n bằng:","o":["29","128","30","28"],"a":0,"t":"2B"},{"q":"DES có khoá hiệu dụng 56-bit. Số khoá khả dĩ là:","o":["2^64","2^56","2^128","56!"],"a":1,"t":"2A"},{"q":"AES-128 dùng khoá 128-bit. Số khoá khả dĩ là:","o":["26!","2^56","2^128","2^64"],"a":2,"t":"2A"},{"q":"AES-256 dùng khoá 256-bit. Số khoá khả dĩ là:","o":["2^256","2^128","2^56","256!"],"a":0,"t":"2A"},{"q":"Hàm băm đầu ra 256-bit. Số giá trị băm khác nhau tối đa:","o":["2^128","256!","2^256","256"],"a":2,"t":"2B"},{"q":"MD5 cho digest dài bao nhiêu bit?","o":["160","128","256","512"],"a":1,"t":"2B"},{"q":"SHA-1 cho digest dài bao nhiêu bit?","o":["256","160","128","224"],"a":1,"t":"2B"},{"q":"SHA-256 cho digest dài bao nhiêu bit?","o":["256","160","512","128"],"a":0,"t":"2B"},{"q":"Mật khẩu 4 ký tự, mỗi ký tự chữ thường (26). Số tổ hợp brute-force tối đa:","o":["26!","26×4","4^26","26^4 = 456.976"],"a":3,"t":"B4"},{"q":"Mật khẩu 6 ký tự chữ thường (26). Số tổ hợp brute-force tối đa:","o":["26×6","6^26","26^6","2^26"],"a":2,"t":"B4"},{"q":"WEP dùng IV 24-bit. Số giá trị IV khác nhau tối đa:","o":["2^48","2^24 ≈ 16,7 triệu","2^104","24^2"],"a":1,"t":"B6"},{"q":"Khoá WEP 64-bit thực chất chỉ dùng bao nhiêu bit cho mã hoá (24-bit còn lại là IV)?","o":["40-bit","104-bit","56-bit","64-bit"],"a":0,"t":"B6"},{"q":"Khoá WEP 128-bit thực chất dùng bao nhiêu bit cho mã hoá?","o":["104-bit","64-bit","128-bit","40-bit"],"a":0,"t":"B6"}];
-const NUM_EXAMS=10, PER=40, DUR=75*60;
-// Blueprint per exam (sums to 40)
+const NUM_EXAMS=10, DUR=75*60, PERPAGE=5;
 const BLUEPRINT={B1:7,"2A":8,"2B":6,B3:5,B4:5,B5:6,B6:3};
-// group bank by topic
 const POOL={}; BANK.forEach(q=>{(POOL[q.t]=POOL[q.t]||[]).push(q);});
-// seeded PRNG (mulberry32)
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 function shuffle(arr,rand){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-// build exam N (1..10) deterministically
 function buildExam(n){
-  const rand=rng(n*7919+13);
-  const out=[];
-  for(const t in BLUEPRINT){
-    const need=BLUEPRINT[t]; const pool=POOL[t]||[];
-    const sh=shuffle(pool,rand);
-    // take 'need', cycling if pool smaller
-    for(let i=0;i<need;i++) out.push(sh[i%sh.length]);
-  }
-  // shuffle question order within exam, and shuffle options per question
-  const qorder=shuffle(out,rand);
-  return qorder.map(q=>{
-    const idxs=shuffle([0,1,2,3],rand);
-    const o=idxs.map(i=>q.o[i]);
-    const a=idxs.indexOf(q.a);
-    return {q:q.q,o,a};
-  });
+  const rand=rng(n*7919+13);const out=[];
+  for(const t in BLUEPRINT){const need=BLUEPRINT[t];const pool=POOL[t]||[];const sh=shuffle(pool,rand);for(let i=0;i<need;i++)out.push(sh[i%sh.length]);}
+  return shuffle(out,rand).map(q=>{const idxs=shuffle([0,1,2,3],rand);return {q:q.q,o:idxs.map(i=>q.o[i]),a:idxs.indexOf(q.a)};});
 }
-const EXAMS={}; for(let n=1;n<=NUM_EXAMS;n++)EXAMS[n]=buildExam(n);
-const TITLES={}; for(let n=1;n<=NUM_EXAMS;n++)TITLES[n]="Đề "+n;
+const EXAMS={};for(let n=1;n<=NUM_EXAMS;n++)EXAMS[n]=buildExam(n);
+const TOTAL=BANK.length;
 
-let S={exam:null,idx:0,ans:[],left:0,timer:null};
+let S={exam:null,ans:[],page:0,left:0,timer:null};
 const app=document.getElementById("app");
 const $=h=>{const d=document.createElement("div");d.innerHTML=h;return d.firstElementChild;};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function setNav(v){document.getElementById("nav-home").classList.toggle("active",v==="home");document.getElementById("nav-lb").classList.toggle("active",v==="lb");}
+function inExam(){return S.exam!==null && S.timer!==null;}
+function leaveGuard(go){ if(inExam()){ if(!confirm("Bạn đang làm bài. Rời đi sẽ huỷ bài thi hiện tại. Tiếp tục?"))return; clearInterval(S.timer);S.timer=null;S.exam=null; } go(); }
+document.getElementById("brand").onclick=()=>leaveGuard(home);
+document.getElementById("nav-home").onclick=()=>leaveGuard(home);
+document.getElementById("nav-lb").onclick=()=>leaveGuard(()=>showLB(null));
 
 function home(){
-  app.innerHTML="";
-  app.appendChild($('<div class="card"><p class="h">Chọn đề để bắt đầu</p><p class="muted">10 bộ đề, mỗi đề 40 câu trắc nghiệm (75 phút), phủ đủ các bài: tổng quan, mã hoá cổ điển/hiện đại, chứng thực, dò tìm lỗ hổng, nguy cơ hệ thống, mã độc, mạng không dây — kèm câu vận dụng tính toán (Playfair, Caesar, RSA…). Tự chấm điểm khi nộp.</p></div>'));
-  const g=$('<div class="grid"></div>');
-  for(let n=1;n<=NUM_EXAMS;n++){const c=$('<div class="pick"></div>');c.innerHTML='<b>'+TITLES[n]+'</b><span>40 câu · 75 phút</span>';c.onclick=()=>start(n);g.appendChild(c);}
+  setNav("home");window.scrollTo(0,0);app.innerHTML="";
+  app.appendChild($('<div class="hero"><h1>Luyện thi An ninh thông tin</h1><p>10 bộ đề trắc nghiệm bám sát đề cương · tự chấm điểm · bảng xếp hạng chung</p></div>'));
+  const st=$('<div class="stats"></div>');
+  st.innerHTML='<div class="stat"><b>10</b><span>bộ đề</span></div><div class="stat"><b>40</b><span>câu / đề</span></div><div class="stat"><b>75′</b><span>thời gian</span></div><div class="stat"><b>'+TOTAL+'</b><span>câu hỏi</span></div>';
+  app.appendChild(st);
+  app.appendChild($('<p class="h" style="margin-top:18px">Chọn đề để bắt đầu</p>'));
+  const g=$('<div class="exam-grid"></div>');
+  for(let n=1;n<=NUM_EXAMS;n++){
+    const c=$('<div class="exam"></div>');
+    const done=loadProgress(n);
+    c.innerHTML='<div class="num">Bộ đề</div><div class="nm">Đề '+n+'</div><div class="meta"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 40 câu · 75 phút</div>'+(done?'<span class="badge">Điểm gần nhất '+done+'</span>':'');
+    c.onclick=()=>confirmStart(n);
+    g.appendChild(c);
+  }
   app.appendChild(g);
-  const b=$('<button class="btn">Xem bảng xếp hạng chung</button>');b.onclick=()=>showLB(null);
-  app.appendChild(b);
-  if(window.LB && !window.LB.enabled){app.appendChild($('<div class="warn-box">Bảng xếp hạng chung chưa kết nối Firebase — điểm tạm lưu trên máy bạn. Xem hướng dẫn trong file README.</div>'));}
+  if(window.LB && !window.LB.enabled)app.appendChild($('<div class="warn-box">Bảng xếp hạng chung chưa kết nối Firebase — điểm tạm lưu trên máy bạn. Xem hướng dẫn trong file README để bật xếp hạng chung.</div>'));
 }
-function start(n){S.exam=n;S.idx=0;S.ans=new Array(EXAMS[n].length).fill(-1);S.left=DUR;
+function loadProgress(n){try{const m=JSON.parse(localStorage.getItem("antt_last")||"{}");return m[n];}catch(e){return null;}}
+function saveProgress(n,score){try{const m=JSON.parse(localStorage.getItem("antt_last")||"{}");m[n]=score;localStorage.setItem("antt_last",JSON.stringify(m));}catch(e){}}
+
+// ===== CONFIRM modal trước khi vào thi =====
+function confirmStart(n){
+  const ov=$('<div class="overlay"></div>');
+  const m=$('<div class="modal"></div>');
+  m.innerHTML='<h3>Bắt đầu Đề '+n+'?</h3><p class="muted" style="margin:4px 0 0">Khi bắt đầu, đồng hồ sẽ chạy. Bạn có thể di chuyển giữa các câu và nộp bài bất cứ lúc nào.</p>'+
+    '<div class="info"><div><span>Số câu</span><b>40 câu trắc nghiệm</b></div><div><span>Thời gian</span><b>75 phút</b></div><div><span>Cách tính</span><b>0,25 đ/câu · thang 10</b></div></div>';
+  const row=$('<div class="row" style="justify-content:flex-end"></div>');
+  const cancel=$('<button class="btn">Huỷ</button>');cancel.onclick=()=>ov.remove();
+  const ok=$('<button class="btn pri">Vào thi</button>');ok.onclick=()=>{ov.remove();start(n);};
+  row.appendChild(cancel);row.appendChild(ok);m.appendChild(row);
+  ov.appendChild(m);ov.onclick=e=>{if(e.target===ov)ov.remove();};
+  document.body.appendChild(ov);
+}
+
+function start(n){
+  S.exam=n;S.ans=new Array(EXAMS[n].length).fill(-1);S.page=0;S.left=DUR;
   if(S.timer)clearInterval(S.timer);
-  S.timer=setInterval(()=>{S.left--;const t=document.getElementById("timer");if(t){t.textContent=fmt(S.left);if(S.left<=300)t.classList.add("warn");}if(S.left<=0){clearInterval(S.timer);submit();}},1000);
+  S.timer=setInterval(()=>{S.left--;const t=document.getElementById("timer");if(t){t.textContent=fmt(S.left);if(S.left<=300)t.classList.add("warn");}if(S.left<=0){clearInterval(S.timer);S.timer=null;submit();}},1000);
   quiz();
 }
 function quiz(){
-  const ex=EXAMS[S.exam],q=ex[S.idx],done=S.ans.filter(a=>a>=0).length;
+  setNav("");window.scrollTo(0,0);const ex=EXAMS[S.exam];const done=S.ans.filter(a=>a>=0).length;
+  const pages=Math.ceil(ex.length/PERPAGE);
   app.innerHTML="";
-  const bar=$('<div class="bar"></div>');
-  bar.innerHTML='<div style="font-weight:600">'+TITLES[S.exam]+' · Câu '+(S.idx+1)+'/'+ex.length+'</div><div class="timer" id="timer">'+fmt(S.left)+'</div>';
-  app.appendChild(bar);
-  const card=$('<div class="card"></div>');
-  card.appendChild($('<p style="font-weight:600;margin:0 0 12px">'+(S.idx+1)+'. '+esc(q.q)+'</p>'));
-  ["a","b","c","d"].forEach((L,i)=>{const o=$('<div class="opt'+(S.ans[S.idx]===i?' sel':'')+'"></div>');o.innerHTML='<span class="let">'+L+'.</span><span>'+esc(q.o[i])+'</span>';o.onclick=()=>{S.ans[S.idx]=i;quiz();};card.appendChild(o);});
-  app.appendChild(card);
-  const ctrl=$('<div class="row" style="justify-content:space-between;margin-top:12px"></div>');
-  const p=$('<button class="btn">← Câu trước</button>');p.disabled=S.idx===0;p.onclick=()=>{S.idx--;quiz();};
-  const nx=$('<button class="btn">Câu sau →</button>');nx.disabled=S.idx===ex.length-1;nx.onclick=()=>{S.idx++;quiz();};
-  ctrl.appendChild(p);ctrl.appendChild(nx);app.appendChild(ctrl);
-  const nav=$('<div class="nav"></div>');
-  ex.forEach((_,i)=>{const d=$('<div class="dot'+(S.ans[i]>=0?' done':'')+(i===S.idx?' cur':'')+'">'+(i+1)+'</div>');d.onclick=()=>{S.idx=i;quiz();};nav.appendChild(d);});
-  app.appendChild(nav);
-  const sub=$('<div class="row" style="align-items:center;margin-top:8px"></div>');
-  const sb=$('<button class="btn pri">Nộp bài & chấm điểm</button>');sb.onclick=()=>{if(done<ex.length&&!confirm("Còn "+(ex.length-done)+" câu chưa làm. Vẫn nộp?"))return;submit();};
-  sub.appendChild(sb);sub.appendChild($('<span class="muted">Đã làm '+done+'/'+ex.length+'</span>'));
-  app.appendChild(sub);
+  const top=$('<div class="examtop"></div>');
+  top.innerHTML='<div style="font-weight:700">Đề '+S.exam+'</div><div class="progress"><i style="width:'+(done/ex.length*100)+'%"></i></div><div class="muted" style="white-space:nowrap">'+done+'/'+ex.length+'</div><div class="timer" id="timer">'+fmt(S.left)+'</div>';
+  app.appendChild(top);
+  const start=S.page*PERPAGE, end=Math.min(start+PERPAGE,ex.length);
+  for(let i=start;i<end;i++){
+    const q=ex[i];const card=$('<div class="qcard"></div>');
+    const head=$('<div class="qhead"></div>');head.innerHTML='<span class="qnum">Câu '+(i+1)+'</span><span class="qtext">'+esc(q.q)+'</span>';
+    card.appendChild(head);
+    ["a","b","c","d"].forEach((L,k)=>{const o=$('<div class="opt'+(S.ans[i]===k?' sel':'')+'"></div>');o.innerHTML='<span class="let">'+L+'</span><span>'+esc(q.o[k])+'</span>';o.onclick=()=>{S.ans[i]=k;quiz();};card.appendChild(o);});
+    app.appendChild(card);
+  }
+  // pager
+  const pager=$('<div class="pager"></div>');
+  const prev=$('<div class="pg">‹</div>');prev.onclick=()=>{if(S.page>0){S.page--;quiz();}};pager.appendChild(prev);
+  for(let p=0;p<pages;p++){
+    const ps=p*PERPAGE, pe=Math.min(ps+PERPAGE,ex.length);
+    let cls="pg";if(p===S.page)cls+=" active";
+    else{let any=false;for(let i=ps;i<pe;i++)if(S.ans[i]>=0)any=true;if(any)cls+=" haspart";}
+    const d=$('<div class="'+cls+'">'+(p+1)+'</div>');d.onclick=()=>{S.page=p;quiz();};pager.appendChild(d);
+  }
+  const nxt=$('<div class="pg">›</div>');nxt.onclick=()=>{if(S.page<pages-1){S.page++;quiz();}};pager.appendChild(nxt);
+  app.appendChild(pager);
+  const sub=$('<div class="row" style="justify-content:space-between;align-items:center;margin-top:8px"></div>');
+  const left=$('<span class="muted">Trang '+(S.page+1)+'/'+pages+' · đã làm '+done+'/'+ex.length+' câu</span>');
+  const sb=$('<button class="btn pri lg">Nộp bài & chấm điểm</button>');
+  sb.onclick=()=>{if(done<ex.length&&!confirm("Còn "+(ex.length-done)+" câu chưa làm. Vẫn nộp bài?"))return;submit();};
+  sub.appendChild(left);sub.appendChild(sb);app.appendChild(sub);
 }
 function submit(){
-  if(S.timer)clearInterval(S.timer);
+  if(S.timer){clearInterval(S.timer);S.timer=null;}
   const ex=EXAMS[S.exam];let c=0;ex.forEach((q,i)=>{if(S.ans[i]===q.a)c++;});
   S.res={correct:c,total:ex.length,score:Math.round(c/ex.length*1000)/100,used:DUR-S.left};
+  saveProgress(S.exam,S.res.score.toFixed(2));
   result();
 }
 function result(){
-  const r=S.res;app.innerHTML="";
-  app.appendChild($('<p class="h">Kết quả — '+TITLES[S.exam]+'</p>'));
-  const g=$('<div class="grid"></div>');
+  setNav("");window.scrollTo(0,0);const r=S.res;app.innerHTML="";
+  app.appendChild($('<p class="h">Kết quả — Đề '+S.exam+'</p>'));
+  const g=$('<div class="grid3"></div>');
   g.appendChild($('<div class="metric"><div class="l">Số câu đúng</div><div class="v">'+r.correct+'/'+r.total+'</div></div>'));
   g.appendChild($('<div class="metric"><div class="l">Điểm (thang 10)</div><div class="v" style="color:'+(r.score>=5?'var(--ok)':'var(--bad)')+'">'+r.score.toFixed(2)+'</div></div>'));
-  g.appendChild($('<div class="metric"><div class="l">Thời gian</div><div class="v">'+fmt(r.used)+'</div></div>'));
+  g.appendChild($('<div class="metric"><div class="l">Thời gian làm</div><div class="v">'+fmt(r.used)+'</div></div>'));
   app.appendChild(g);
   const save=$('<div class="card"></div>');
-  save.innerHTML='<p style="font-weight:600;margin:0 0 6px">Lưu điểm lên bảng xếp hạng chung</p><p class="muted" style="margin:0 0 10px">Điểm hiển thị cho mọi người cùng dùng app này.</p>';
+  save.innerHTML='<p style="font-weight:600;margin:0 0 6px">Lưu điểm lên bảng xếp hạng chung</p><p class="muted" style="margin:0 0 12px">Điểm của bạn sẽ hiển thị cho mọi người cùng dùng app này.</p>';
   const row=$('<div class="row"></div>');
   const inp=$('<input placeholder="Tên của bạn (vd: An - 21520123)" maxlength="30">');
   const sv=$('<button class="btn pri" style="white-space:nowrap">Lưu điểm</button>');
@@ -185,46 +267,50 @@ function result(){
     const rec={name:name.slice(0,30),exam:S.exam,score:r.score,correct:r.correct,total:r.total,used:r.used,ts:Date.now()};
     let ok=false;try{if(window.LB&&window.LB.enabled)ok=await window.LB.save(rec);}catch(e){}
     if(!ok){const local=JSON.parse(localStorage.getItem("antt_lb")||"[]");local.push(rec);localStorage.setItem("antt_lb",JSON.stringify(local));}
-    showLB(S.exam);};
+    showLB(S.exam,true);};
   row.appendChild(inp);row.appendChild(sv);save.appendChild(row);app.appendChild(save);
   const btns=$('<div class="row"></div>');
   const rev=$('<button class="btn">Xem lại đáp án</button>');rev.onclick=review;
   const rt=$('<button class="btn">Làm lại đề này</button>');rt.onclick=()=>start(S.exam);
-  const hm=$('<button class="btn">Chọn đề khác</button>');hm.onclick=home;
+  const hm=$('<button class="btn">Chọn đề khác</button>');hm.onclick=()=>{S.exam=null;home();};
   btns.appendChild(rev);btns.appendChild(rt);btns.appendChild(hm);app.appendChild(btns);
 }
 function review(){
-  const ex=EXAMS[S.exam];app.innerHTML="";
-  app.appendChild($('<p class="h">Xem lại đáp án — '+TITLES[S.exam]+'</p>'));
-  ex.forEach((q,i)=>{const c=$('<div class="card" style="margin:8px 0"></div>');
+  window.scrollTo(0,0);const ex=EXAMS[S.exam];app.innerHTML="";
+  app.appendChild($('<p class="h">Xem lại đáp án — Đề '+S.exam+'</p>'));
+  ex.forEach((q,i)=>{const c=$('<div class="qcard"></div>');
     const ua=S.ans[i],ok=ua===q.a;
-    c.appendChild($('<p style="font-weight:600;margin:0 0 8px">'+(i+1)+'. '+esc(q.q)+' '+(ok?'<span style="color:var(--ok)">✓</span>':'<span style="color:var(--bad)">✗</span>')+'</p>'));
-    ["a","b","c","d"].forEach((L,k)=>{let cls="opt";if(k===q.a)cls+=" correct";else if(k===ua&&!ok)cls+=" wrong";const o=$('<div class="'+cls+'"></div>');o.innerHTML='<span class="let">'+L+'.</span><span>'+esc(q.o[k])+'</span>';c.appendChild(o);});
+    const head=$('<div class="qhead"></div>');head.innerHTML='<span class="qnum" style="background:'+(ok?'var(--okbg)':'var(--badbg)')+';color:'+(ok?'var(--ok)':'var(--bad)')+'">Câu '+(i+1)+'</span><span class="qtext">'+esc(q.q)+'</span>';
+    c.appendChild(head);
+    ["a","b","c","d"].forEach((L,k)=>{let cls="opt";if(k===q.a)cls+=" correct";else if(k===ua&&!ok)cls+=" wrong";const o=$('<div class="'+cls+'"></div>');o.innerHTML='<span class="let">'+L+'</span><span>'+esc(q.o[k])+'</span>';c.appendChild(o);});
     if(ua<0)c.appendChild($('<p class="muted" style="margin:6px 0 0">(Chưa trả lời)</p>'));
     app.appendChild(c);});
-  const b=$('<button class="btn">← Về kết quả</button>');b.onclick=result;app.appendChild(b);
+  const b=$('<button class="btn pri">← Về kết quả</button>');b.onclick=result;app.appendChild(b);
 }
-async function showLB(filter){
-  app.innerHTML="";
+async function showLB(filter,fromResult){
+  setNav("lb");window.scrollTo(0,0);app.innerHTML="";
   app.appendChild($('<p class="h">Bảng xếp hạng chung</p>'));
-  const f=$('<div class="row" style="margin-bottom:12px"></div>');
-  const mk=(lb,v)=>{const b=$('<button class="btn'+(filter===v?' pri':'')+'">'+lb+'</button>');b.onclick=()=>showLB(v);return b;};
+  app.appendChild($('<p class="muted" style="margin:0 0 12px">Xếp theo điểm cao nhất, rồi đến thời gian làm nhanh nhất.</p>'));
+  const f=$('<div class="chips"></div>');
+  const mk=(lb,v)=>{const b=$('<div class="chip'+(filter===v?' active':'')+'">'+lb+'</div>');b.onclick=()=>showLB(v);return b;};
   f.appendChild(mk("Tất cả",null));for(let n=1;n<=NUM_EXAMS;n++)f.appendChild(mk("Đề "+n,n));
   app.appendChild(f);
-  const ld=$('<p class="muted">Đang tải…</p>');app.appendChild(ld);
+  const ld=$('<div class="card"><p class="muted" style="margin:0">Đang tải bảng xếp hạng…</p></div>');app.appendChild(ld);
   let data=null;try{if(window.LB&&window.LB.enabled)data=await window.LB.load();}catch(e){}
   if(!data)data=JSON.parse(localStorage.getItem("antt_lb")||"[]");
   ld.remove();
-  if(!window.LB||!window.LB.enabled)app.appendChild($('<div class="warn-box">Đang hiển thị điểm lưu cục bộ (chưa kết nối Firebase).</div>'));
+  if(!window.LB||!window.LB.enabled)app.appendChild($('<div class="warn-box">Đang hiển thị điểm lưu cục bộ trên máy bạn (chưa kết nối Firebase).</div>'));
   let lb=data.slice();if(filter)lb=lb.filter(x=>x.exam===filter);
   lb.sort((a,b)=>b.score-a.score||a.used-b.used);
-  if(!lb.length){app.appendChild($('<div class="card"><p class="muted" style="margin:0">Chưa có ai nộp bài. Hãy là người đầu tiên!</p></div>'));}
-  else{const card=$('<div class="card"></div>');
-    card.appendChild($('<div class="lbrow" style="font-weight:600;color:var(--muted)"><span class="rank">#</span><span style="flex:1">Tên</span><span style="width:54px">Đề</span><span style="width:54px;text-align:right">Điểm</span><span style="width:60px;text-align:right">T.gian</span></div>'));
-    lb.slice(0,100).forEach((x,i)=>{const r=$('<div class="lbrow"></div>');r.innerHTML='<span class="rank">'+(i+1)+'</span><span style="flex:1">'+esc(x.name)+'</span><span style="width:54px" class="muted">Đề '+x.exam+'</span><span style="width:54px;text-align:right;font-weight:600">'+Number(x.score).toFixed(2)+'</span><span style="width:60px;text-align:right" class="muted">'+fmt(x.used)+'</span>';card.appendChild(r);});
+  if(!lb.length){app.appendChild($('<div class="card"><p class="muted" style="margin:0;text-align:center;padding:14px 0">Chưa có ai nộp bài'+(filter?' cho đề này':'')+'. Hãy là người đầu tiên!</p></div>'));}
+  else{const card=$('<div class="card" style="padding:8px 14px"></div>');
+    card.appendChild($('<div class="lbrow" style="font-weight:600;color:var(--muted);font-size:12.5px"><span class="rank">#</span><span class="lbname">Tên</span><span style="width:48px;text-align:center">Đề</span><span style="width:50px;text-align:right">Điểm</span><span style="width:58px;text-align:right">T.gian</span></div>'));
+    lb.slice(0,100).forEach((x,i)=>{const r=$('<div class="lbrow"></div>');const rc=i<3?' r'+(i+1):'';r.innerHTML='<span class="rank'+rc+'">'+(i+1)+'</span><span class="lbname">'+esc(x.name)+'</span><span style="width:48px;text-align:center" class="muted">'+x.exam+'</span><span style="width:50px;text-align:right;font-weight:700">'+Number(x.score).toFixed(2)+'</span><span style="width:58px;text-align:right" class="muted">'+fmt(x.used)+'</span>';card.appendChild(r);});
     app.appendChild(card);}
-  const b=$('<button class="btn" style="margin-top:12px">← Về trang chính</button>');b.onclick=home;app.appendChild(b);
+  if(fromResult){const b=$('<button class="btn" style="margin-top:14px">← Về kết quả</button>');b.onclick=result;app.appendChild(b);}
+  const hb=$('<button class="btn'+(fromResult?'':' pri')+'" style="margin-top:14px;margin-left:'+(fromResult?'8px':'0')+'">Về trang đề thi</button>');hb.onclick=()=>{S.exam=inExam()?S.exam:null;home();};app.appendChild(hb);
 }
+window.addEventListener("beforeunload",e=>{if(inExam()){e.preventDefault();e.returnValue="";}});
 home();
 </script>
 </body>
