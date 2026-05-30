@@ -211,36 +211,57 @@ function start(n){
   S.timer=setInterval(()=>{S.left--;const t=document.getElementById("timer");if(t){t.textContent=fmt(S.left);if(S.left<=300)t.classList.add("warn");}if(S.left<=0){clearInterval(S.timer);S.timer=null;submit();}},1000);
   quiz();
 }
+function goPage(p){S.page=p;quiz();window.scrollTo({top:0,behavior:"smooth"});}
+function updateStats(){
+  const ex=EXAMS[S.exam];const done=S.ans.filter(a=>a>=0).length;const pages=Math.ceil(ex.length/PERPAGE);
+  const pf=document.getElementById("progfill");if(pf)pf.style.width=(done/ex.length*100)+"%";
+  const pc=document.getElementById("progcount");if(pc)pc.textContent=done+"/"+ex.length;
+  const sl=document.getElementById("subleft");if(sl)sl.textContent="Trang "+(S.page+1)+"/"+pages+" · đã làm "+done+"/"+ex.length+" câu";
+  // update pager dot states for current page range awareness
+  document.querySelectorAll(".pager .pg[data-p]").forEach(d=>{
+    const p=+d.getAttribute("data-p");const ps=p*PERPAGE,pe=Math.min(ps+PERPAGE,ex.length);
+    d.classList.remove("active","haspart");
+    if(p===S.page)d.classList.add("active");
+    else{let any=false;for(let i=ps;i<pe;i++)if(S.ans[i]>=0)any=true;if(any)d.classList.add("haspart");}
+  });
+}
+function pickAnswer(i,k,cardEl){
+  S.ans[i]=k;
+  // update only this question's options, no re-render, no scroll
+  const opts=cardEl.querySelectorAll(".opt");
+  opts.forEach((o,idx)=>o.classList.toggle("sel",idx===k));
+  updateStats();
+}
 function quiz(){
-  setNav("");window.scrollTo(0,0);const ex=EXAMS[S.exam];const done=S.ans.filter(a=>a>=0).length;
+  setNav("");const ex=EXAMS[S.exam];const done=S.ans.filter(a=>a>=0).length;
   const pages=Math.ceil(ex.length/PERPAGE);
   app.innerHTML="";
   const top=$('<div class="examtop"></div>');
-  top.innerHTML='<div style="font-weight:700">Đề '+S.exam+'</div><div class="progress"><i style="width:'+(done/ex.length*100)+'%"></i></div><div class="muted" style="white-space:nowrap">'+done+'/'+ex.length+'</div><div class="timer" id="timer">'+fmt(S.left)+'</div>';
+  top.innerHTML='<div style="font-weight:700">Đề '+S.exam+'</div><div class="progress"><i id="progfill" style="width:'+(done/ex.length*100)+'%"></i></div><div class="muted" id="progcount" style="white-space:nowrap">'+done+'/'+ex.length+'</div><div class="timer" id="timer">'+fmt(S.left)+'</div>';
   app.appendChild(top);
   const start=S.page*PERPAGE, end=Math.min(start+PERPAGE,ex.length);
   for(let i=start;i<end;i++){
     const q=ex[i];const card=$('<div class="qcard"></div>');
     const head=$('<div class="qhead"></div>');head.innerHTML='<span class="qnum">Câu '+(i+1)+'</span><span class="qtext">'+esc(q.q)+'</span>';
     card.appendChild(head);
-    ["a","b","c","d"].forEach((L,k)=>{const o=$('<div class="opt'+(S.ans[i]===k?' sel':'')+'"></div>');o.innerHTML='<span class="let">'+L+'</span><span>'+esc(q.o[k])+'</span>';o.onclick=()=>{S.ans[i]=k;quiz();};card.appendChild(o);});
+    ["a","b","c","d"].forEach((L,k)=>{const o=$('<div class="opt'+(S.ans[i]===k?' sel':'')+'"></div>');o.innerHTML='<span class="let">'+L+'</span><span>'+esc(q.o[k])+'</span>';o.onclick=()=>pickAnswer(i,k,card);card.appendChild(o);});
     app.appendChild(card);
   }
   // pager
   const pager=$('<div class="pager"></div>');
-  const prev=$('<div class="pg">‹</div>');prev.onclick=()=>{if(S.page>0){S.page--;quiz();}};pager.appendChild(prev);
+  const prev=$('<div class="pg">‹</div>');prev.onclick=()=>{if(S.page>0)goPage(S.page-1);};pager.appendChild(prev);
   for(let p=0;p<pages;p++){
     const ps=p*PERPAGE, pe=Math.min(ps+PERPAGE,ex.length);
     let cls="pg";if(p===S.page)cls+=" active";
     else{let any=false;for(let i=ps;i<pe;i++)if(S.ans[i]>=0)any=true;if(any)cls+=" haspart";}
-    const d=$('<div class="'+cls+'">'+(p+1)+'</div>');d.onclick=()=>{S.page=p;quiz();};pager.appendChild(d);
+    const d=$('<div class="'+cls+'" data-p="'+p+'">'+(p+1)+'</div>');d.onclick=()=>goPage(p);pager.appendChild(d);
   }
-  const nxt=$('<div class="pg">›</div>');nxt.onclick=()=>{if(S.page<pages-1){S.page++;quiz();}};pager.appendChild(nxt);
+  const nxt=$('<div class="pg">›</div>');nxt.onclick=()=>{if(S.page<pages-1)goPage(S.page+1);};pager.appendChild(nxt);
   app.appendChild(pager);
   const sub=$('<div class="row" style="justify-content:space-between;align-items:center;margin-top:8px"></div>');
-  const left=$('<span class="muted">Trang '+(S.page+1)+'/'+pages+' · đã làm '+done+'/'+ex.length+' câu</span>');
+  const left=$('<span class="muted" id="subleft">Trang '+(S.page+1)+'/'+pages+' · đã làm '+done+'/'+ex.length+' câu</span>');
   const sb=$('<button class="btn pri lg">Nộp bài & chấm điểm</button>');
-  sb.onclick=()=>{if(done<ex.length&&!confirm("Còn "+(ex.length-done)+" câu chưa làm. Vẫn nộp bài?"))return;submit();};
+  sb.onclick=()=>{const d=S.ans.filter(a=>a>=0).length;if(d<ex.length&&!confirm("Còn "+(ex.length-d)+" câu chưa làm. Vẫn nộp bài?"))return;submit();};
   sub.appendChild(left);sub.appendChild(sb);app.appendChild(sub);
 }
 function submit(){
